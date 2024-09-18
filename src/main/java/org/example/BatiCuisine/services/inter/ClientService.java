@@ -1,15 +1,12 @@
-package org.example.BatiCuisine.dao.inter;
+package org.example.BatiCuisine.services.inter;
 
 import org.example.BatiCuisine.entities.Client;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
-public interface ClientDao {
+public interface ClientService {
 
     void ajouterClient(Client client);
     Optional<Client> afficherInformations(Integer id);
     void appliquerRemise();
-    Map chercherClient(String valeur);
 }

@@ -1,4 +1,4 @@
-package org.example.BatiCuisine.dao.impl;
+package org.example.BatiCuisine.services.impl;
 
 import org.example.BatiCuisine.dao.inter.ClientDao;
 import org.example.BatiCuisine.entities.Client;
@@ -7,11 +7,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
-public class ClientDaoImpl implements ClientDao {
+public class ClientServiceImpl implements ClientDao {
 
     private Connection connection;
 
@@ -56,33 +54,4 @@ public class ClientDaoImpl implements ClientDao {
     public void appliquerRemise() {
 
     }
-
-    @Override
-    public Map chercherClient(String valeur) {
-        String sql = "SELECT * FROM clients c WHERE c.name LIKE ?" +
-                "OR c.adresse LIKE ?" +
-                "OR c.telephone LIKE ?";
-        Map<Integer, Client> clientsTrouves = new HashMap<>();
-        try(PreparedStatement preparedStatement = connection.prepareStatement(sql)){
-            for (int i=0; i<3; i++)
-                preparedStatement.setString(1,"%" +valeur+ "%");
-
-            try (ResultSet resultSet = preparedStatement.executeQuery()){
-                while (resultSet.next()){
-                    Client client = new Client(
-                            resultSet.getInt("id"),
-                            resultSet.getString("nom"),
-                            resultSet.getString("adresse"),
-                            resultSet.getString("telephone"),
-                            resultSet.getBoolean("estProfessionnel")
-                    );
-                    clientsTrouves.put(client.getId(), client);
-                }
-            }
-        }catch(SQLException e){
-            throw new RuntimeException("Erreur lors de la recherche des clients : " + e.getMessage(), e);
-        }
-        return clientsTrouves;
-    }
 }
-
