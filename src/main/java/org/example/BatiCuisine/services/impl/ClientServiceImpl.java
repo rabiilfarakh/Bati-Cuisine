@@ -7,9 +7,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 public class ClientServiceImpl implements ClientDao {
 
@@ -57,11 +55,11 @@ public class ClientServiceImpl implements ClientDao {
     }
 
     @Override
-    public Map<Integer, Client> chercherClient(String valeur) {
+    public List<Client> chercherClient(String valeur) {
         String sql = "SELECT * FROM clients c WHERE c.nom LIKE ?" +
                 " OR c.adresse LIKE ?" +
                 " OR c.telephone LIKE ?";
-        Map<Integer, Client> clientsTrouves = new HashMap<>();
+        List<Client> clientsTrouves = new ArrayList<>();
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             for (int i = 1; i <= 3; i++) {
@@ -76,7 +74,7 @@ public class ClientServiceImpl implements ClientDao {
                             resultSet.getString("telephone"),
                             resultSet.getBoolean("estProfessionnel")
                     );
-                    clientsTrouves.put(client.getId(), client);
+                    clientsTrouves.add(client);
                 }
             }
         } catch (SQLException e) {

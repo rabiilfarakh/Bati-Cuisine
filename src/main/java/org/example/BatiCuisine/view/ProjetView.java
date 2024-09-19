@@ -10,7 +10,7 @@ public class ProjetView {
     private static final List<Projet> projets = new ArrayList<>();
     private static final Map<String,String> data = new HashMap<>();
 
-    public static void creerProjet(Map<Integer, Client> client) {
+    public static void creerProjet(List<Client> client) {
         System.out.println("--- Création d'un Nouveau Projet ---");
         System.out.print("Entrez le nom du projet : ");
         String nomProjet = scanner.nextLine();

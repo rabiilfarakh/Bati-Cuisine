@@ -10,7 +10,7 @@ import java.util.*;
 public class ComposantView {
     private static final Scanner scanner = new Scanner(System.in);
 
-    public static void ajouterMainDoeuvre( Map<Integer, Client> client, Map<String,String> data, List<Materiel> materiaux){
+    public static void ajouterMainDoeuvre(List<Client> client, Map<String,String> data, List<Materiel> materiaux){
 
         List<MainDoeuvre> mainDoeuvres = new ArrayList<>();
 
@@ -43,7 +43,7 @@ public class ComposantView {
     }
 
 
-    public static void ajouterComposants(Map<Integer, Client> client, Map<String, String> data) {
+    public static void ajouterComposants(List<Client> client, Map<String, String> data) {
         List<Materiel> materiaux = new ArrayList<>();
 
         System.out.println("--- Ajout des matériaux ---");

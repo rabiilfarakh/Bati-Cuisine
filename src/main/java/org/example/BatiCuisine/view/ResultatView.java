@@ -12,7 +12,7 @@ public class ResultatView {
 
     private static final Scanner scanner = new Scanner(System.in);
 
-    public static void calculCoutTotal(Map<String, Client> client, Map<String, String> data, List<Materiel> materiaux, List<MainDoeuvre> mainDoeuvres) {
+    public static void calculCoutTotal(List<Client> client, Map<String, String> data, List<Materiel> materiaux, List<MainDoeuvre> mainDoeuvres) {
         Double marge = 0.0;
         Double tva = 0.0;
 
@@ -68,17 +68,17 @@ public class ResultatView {
         data.put("tva",String.valueOf(tva));
         data.put("marge",String.valueOf(tva));
 
-        System.out.println("Calcul du coût en cours...");
+        System.out.println("Calcul du coût en cours ...");
         result(client, data, materiaux, mainDoeuvres);
     }
 
 
-    public static void result(Map<String, Client> client, Map<String,String> data, List<Materiel> materiaux, List<MainDoeuvre> mainDoeuvres){
+    public static void result(List<Client> client, Map<String,String> data, List<Materiel> materiaux, List<MainDoeuvre> mainDoeuvres){
 
         System.out.println("--- Résultat du Calcul ---");
         System.out.println("Nom du projet : " + data.get("nomProjet"));
-        System.out.println("Client : " + client.get("nom"));
-        System.out.println("Adresse du chantier : " + client.get("adresse"));
+        System.out.println("Client : " + client.stream().findFirst().map(c -> c.getNom()).orElse("Aucun client trouvé."));
+        System.out.println("Adresse du chantier : " +client.stream().findFirst().map(c -> c.getAdresse()).orElse("Aucun client trouvé."));
         System.out.println("Surface : " + data.get("surface"));
 
         System.out.println("--- Détail des Coûts ---");

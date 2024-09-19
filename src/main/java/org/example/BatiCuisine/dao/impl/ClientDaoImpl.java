@@ -7,9 +7,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 public class ClientDaoImpl implements ClientDao {
 
@@ -41,6 +39,7 @@ public class ClientDaoImpl implements ClientDao {
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
                     Client client = new Client(
+                            resultSet.getInt("id"),
                             resultSet.getString("nom"),
                             resultSet.getString("adresse"),
                             resultSet.getString("telephone"),
@@ -61,11 +60,11 @@ public class ClientDaoImpl implements ClientDao {
     }
 
     @Override
-    public Map<String, Client> chercherClient(String valeur) {
+    public List<Client> chercherClient(String valeur) {
         String sql = "SELECT * FROM clients c WHERE c.nom LIKE ?" +
                 " OR c.adresse LIKE ?" +
                 " OR c.telephone LIKE ?";
-        Map<String, Client> clientsTrouves = new HashMap<>();
+        List<Client> clientsTrouves = new ArrayList<>();
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             for (int i = 1; i <= 3; i++) {
@@ -75,12 +74,13 @@ public class ClientDaoImpl implements ClientDao {
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()) {
                     Client client = new Client(
+                            resultSet.getInt("id"),
                             resultSet.getString("nom"),
                             resultSet.getString("adresse"),
                             resultSet.getString("telephone"),
                             resultSet.getBoolean("estProfessionnel")
                     );
-                    clientsTrouves.put(client.getNom(), client);
+                    clientsTrouves.add(client);
                 }
             }
         } catch (SQLException e) {

@@ -9,11 +9,23 @@ public class Client {
     private boolean estProfessionnel;
 
     // Constructeur
+    public Client(Integer id, String nom, String adresse, String telephone, boolean estProfessionnel) {
+        this.id = id;
+        this.nom = nom;
+        this.adresse = adresse;
+        this.telephone = telephone;
+        this.estProfessionnel = estProfessionnel;
+    }
+    // Constructeur sans id
     public Client(String nom, String adresse, String telephone, boolean estProfessionnel) {
         this.nom = nom;
         this.adresse = adresse;
         this.telephone = telephone;
         this.estProfessionnel = estProfessionnel;
+    }
+
+    public Client() {
+
     }
 
     // Getters et Setters

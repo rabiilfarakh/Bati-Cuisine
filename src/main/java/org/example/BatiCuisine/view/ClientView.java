@@ -6,10 +6,7 @@ import org.example.BatiCuisine.dao.inter.ClientDao;
 import org.example.BatiCuisine.entities.Client;
 
 import java.sql.Connection;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 public class ClientView {
     private static final Scanner scanner = new Scanner(System.in);
@@ -51,13 +48,13 @@ public class ClientView {
         System.out.println("--- Recherche de client existant ---");
         System.out.print("Entrez le nom du client : ");
         String nom = scanner.nextLine();
-        Map<Integer, Client> clientsTrouves = rechercherClient(nom);
+        List<Client> clientsTrouves = rechercherClient(nom);
 
         if (clientsTrouves.isEmpty()) {
             System.out.println("Client non trouvé.");
         } else {
             System.out.println("Clients trouvés :");
-            clientsTrouves.values().forEach(client -> System.out.println(client));
+            clientsTrouves.forEach(client -> System.out.println(client));
             System.out.println("Souhaitez-vous continuer avec ce client ? (y/n) : ");
             String reponse = scanner.nextLine().trim().toLowerCase();
 
@@ -67,7 +64,7 @@ public class ClientView {
         }
     }
 
-    private static Map<Integer, Client> rechercherClient(String nom) {
+    private static List<Client> rechercherClient(String nom) {
         return clientDao.chercherClient(nom);
     }
 
