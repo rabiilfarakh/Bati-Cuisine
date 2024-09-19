@@ -11,12 +11,16 @@ public class Composant {
     private Projet projet;
 
     // Constructeur
-    public Composant(Integer id, String nom, double tauxTVA, TypeComposant typeComposant, Projet projet) {
-        this.id = id;
+    public Composant(String nom, double tauxTVA, TypeComposant typeComposant, Projet projet) {
         this.nom = nom;
         this.tauxTVA = tauxTVA;
         this.typeComposant = typeComposant;
         this.projet = projet;
+    }
+
+    // Constructeur sans unique
+    public Composant(String nom) {
+        this.nom = nom;
     }
 
     // Getters et Setters

@@ -13,8 +13,7 @@ public class Devis {
     private Projet projet;
 
     // Constructeur
-    public Devis(Integer id, double montantEstime, Date dateEmission, Date dateValidite, boolean accepte, Projet projet) {
-        this.id = id;
+    public Devis(double montantEstime, Date dateEmission, Date dateValidite, boolean accepte, Projet projet) {
         this.montantEstime = montantEstime;
         this.dateEmission = dateEmission;
         this.dateValidite = dateValidite;

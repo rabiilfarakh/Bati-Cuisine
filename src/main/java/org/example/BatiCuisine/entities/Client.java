@@ -9,8 +9,7 @@ public class Client {
     private boolean estProfessionnel;
 
     // Constructeur
-    public Client(Integer id, String nom, String adresse, String telephone, boolean estProfessionnel) {
-        this.id = id;
+    public Client(String nom, String adresse, String telephone, boolean estProfessionnel) {
         this.nom = nom;
         this.adresse = adresse;
         this.telephone = telephone;
@@ -56,5 +55,16 @@ public class Client {
 
     public void setEstProfessionnel(boolean estProfessionnel) {
         this.estProfessionnel = estProfessionnel;
+    }
+
+    @Override
+    public String toString() {
+        return "Client{" +
+                "id=" + id +
+                ", nom='" + nom + '\'' +
+                ", adresse='" + adresse + '\'' +
+                ", telephone='" + telephone + '\'' +
+                ", estProfessionnel=" + estProfessionnel +
+                '}';
     }
 }

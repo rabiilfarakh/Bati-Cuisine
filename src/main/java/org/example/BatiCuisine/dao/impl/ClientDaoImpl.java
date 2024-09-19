@@ -15,6 +15,10 @@ public class ClientDaoImpl implements ClientDao {
 
     private Connection connection;
 
+    public ClientDaoImpl(Connection connection) {
+        this.connection = connection;
+    }
+
     @Override
     public void ajouterClient(Client client) {
         String sql = "INSERT INTO clients (nom, adresse, telephone, estProfessionnel) values (?, ?, ?, ?)";
@@ -37,7 +41,6 @@ public class ClientDaoImpl implements ClientDao {
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
                     Client client = new Client(
-                            resultSet.getInt("id"),
                             resultSet.getString("nom"),
                             resultSet.getString("adresse"),
                             resultSet.getString("telephone"),
@@ -58,31 +61,33 @@ public class ClientDaoImpl implements ClientDao {
     }
 
     @Override
-    public Map chercherClient(String valeur) {
-        String sql = "SELECT * FROM clients c WHERE c.name LIKE ?" +
-                "OR c.adresse LIKE ?" +
-                "OR c.telephone LIKE ?";
-        Map<Integer, Client> clientsTrouves = new HashMap<>();
-        try(PreparedStatement preparedStatement = connection.prepareStatement(sql)){
-            for (int i=0; i<3; i++)
-                preparedStatement.setString(1,"%" +valeur+ "%");
+    public Map<String, Client> chercherClient(String valeur) {
+        String sql = "SELECT * FROM clients c WHERE c.nom LIKE ?" +
+                " OR c.adresse LIKE ?" +
+                " OR c.telephone LIKE ?";
+        Map<String, Client> clientsTrouves = new HashMap<>();
 
-            try (ResultSet resultSet = preparedStatement.executeQuery()){
-                while (resultSet.next()){
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            for (int i = 1; i <= 3; i++) {
+                preparedStatement.setString(i, "%" + valeur + "%");
+            }
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
                     Client client = new Client(
-                            resultSet.getInt("id"),
                             resultSet.getString("nom"),
                             resultSet.getString("adresse"),
                             resultSet.getString("telephone"),
                             resultSet.getBoolean("estProfessionnel")
                     );
-                    clientsTrouves.put(client.getId(), client);
+                    clientsTrouves.put(client.getNom(), client);
                 }
             }
-        }catch(SQLException e){
+        } catch (SQLException e) {
             throw new RuntimeException("Erreur lors de la recherche des clients : " + e.getMessage(), e);
         }
         return clientsTrouves;
     }
+
 }
 

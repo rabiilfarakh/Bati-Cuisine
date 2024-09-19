@@ -1,41 +1,74 @@
 package org.example.BatiCuisine.view;
 
+import org.example.BatiCuisine.config.Database;
+import org.example.BatiCuisine.dao.impl.ClientDaoImpl;
+import org.example.BatiCuisine.dao.inter.ClientDao;
 import org.example.BatiCuisine.entities.Client;
 
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 public class ClientView {
     private static final Scanner scanner = new Scanner(System.in);
     private static final List<Client> clients = new ArrayList<>();
 
+    private static final Connection connection = Database.getInstance().getConnection();
+    private static final ClientDao clientDao = new ClientDaoImpl(connection);
+
     public static Client rechercherOuAjouterClient() {
         System.out.println("--- Recherche de client ---");
+        System.out.println("Souhaitez-vous chercher un client existant ou en ajouter un nouveau ?");
         System.out.println("1. Chercher un client existant");
         System.out.println("2. Ajouter un nouveau client");
         System.out.print("Choisissez une option : ");
-        int choix = scanner.nextInt();
-        scanner.nextLine();
 
-        if (choix == 1) {
-            return rechercherClient();
-        } else if (choix == 2) {
-            return ajouterClient();
-        } else {
-            System.out.println("Option invalide.");
+        int choix;
+        try {
+            choix = scanner.nextInt();
+            scanner.nextLine();
+        } catch (Exception e) {
+            System.out.println("Option invalide. Veuillez entrer un nombre.");
+            scanner.nextLine();
             return null;
+        }
+
+        switch (choix) {
+            case 1:
+                rechercherClientEtContinuer();
+                return null;
+            case 2:
+                return ajouterClient();
+            default:
+                System.out.println("Option invalide.");
+                return null;
         }
     }
 
-    private static Client rechercherClient() {
+    private static void rechercherClientEtContinuer() {
         System.out.println("--- Recherche de client existant ---");
         System.out.print("Entrez le nom du client : ");
         String nom = scanner.nextLine();
-        // appler la methode chercherClient
-        //System.out.println("Client trouvé !");
-        System.out.println("Client non trouvé.");
-        return null;
+        Map<Integer, Client> clientsTrouves = rechercherClient(nom);
+
+        if (clientsTrouves.isEmpty()) {
+            System.out.println("Client non trouvé.");
+        } else {
+            System.out.println("Clients trouvés :");
+            clientsTrouves.values().forEach(client -> System.out.println(client));
+            System.out.println("Souhaitez-vous continuer avec ce client ? (y/n) : ");
+            String reponse = scanner.nextLine().trim().toLowerCase();
+
+            if (reponse.equals("y")) {
+                ProjetView.creerProjet(clientsTrouves);
+            }
+        }
+    }
+
+    private static Map<Integer, Client> rechercherClient(String nom) {
+        return clientDao.chercherClient(nom);
     }
 
     private static Client ajouterClient() {
@@ -46,19 +79,20 @@ public class ClientView {
         System.out.print("Entrez le numéro de téléphone : ");
         String telephone = scanner.nextLine();
         System.out.print("Le client est-il un professionnel ? (true/false) : ");
-        boolean estProfessionnel = scanner.nextBoolean();
+        boolean estProfessionnel;
+        try {
+            estProfessionnel = scanner.nextBoolean();
+            scanner.nextLine();
+        } catch (Exception e) {
+            System.out.println("Réponse invalide. La valeur par défaut sera false.");
+            estProfessionnel = false;
+            scanner.nextLine();
+        }
 
-        //Client client = new Client(nom, adresse, telephone, estProfessionnel);
-        //clients.add(client);
+        Client client = new Client(nom, adresse, telephone, estProfessionnel);
+        clientDao.ajouterClient(client);
+
         System.out.println("Client ajouté avec succès !");
-        return null ;//client;
-    }
-
-    private static void afficherClient(Client client) {
-        System.out.println("Nom : " + client.getNom());
-        System.out.println("Adresse : " + client.getAdresse());
-        System.out.println("Téléphone : " + client.getTelephone());
-        System.out.println("Professionnel : " + (client.isEstProfessionnel() ? "Oui" : "Non"));
+        return client;
     }
 }
-

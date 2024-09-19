@@ -7,7 +7,7 @@ public class MainView {
 
     public static void view() {
         while (true) {
-            System.out.println("=== Bienvenue dans l'application de gestion des projets de rénovation de cuisines ===");
+            System.out.println("=== Menu Principal ===");
             System.out.println("1. Créer un nouveau projet");
             System.out.println("2. Afficher les projets existants");
             System.out.println("3. Calculer le coût d'un projet");
@@ -22,9 +22,11 @@ public class MainView {
                     ClientView.rechercherOuAjouterClient();
                     break;
                 case 2:
-                    ProjetView.afficherProjets();
+                    System.out.println("affichage des projet en cours a realiser ...");
+                    //ProjetView.afficherProjets();
                     break;
                 case 3:
+                    System.out.println("Calculer le coût d'un projet en cours a realiser ...");
                     //CalculView.calculerCoutProjet();
                     break;
                 case 4:

@@ -15,8 +15,7 @@ public class Projet {
     private List<Composant> composants;
 
     // Constructeur
-    public Projet(Integer id, String nomProjet, double margeBeneficiaire, double coutTotal, EtatProjet etatProjet, Client client) {
-        this.id = id;
+    public Projet(String nomProjet, double margeBeneficiaire, double coutTotal, EtatProjet etatProjet, Client client) {
         this.nomProjet = nomProjet;
         this.margeBeneficiaire = margeBeneficiaire;
         this.coutTotal = coutTotal;

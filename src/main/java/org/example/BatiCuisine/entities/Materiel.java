@@ -10,8 +10,17 @@ public class Materiel extends Composant {
     private double coefficientQualite;
 
     // Constructeur
-    public Materiel(Integer id, String nom, double tauxTVA, TypeComposant typeComposant, Projet projet, double coutUnitaire, double quantite, double coutTransport, double coefficientQualite) {
-        super(id, nom, tauxTVA, typeComposant, projet);
+    public Materiel(String nom, double tauxTVA, TypeComposant typeComposant, Projet projet, double coutUnitaire, double quantite, double coutTransport, double coefficientQualite) {
+        super(nom, tauxTVA, typeComposant, projet);
+        this.coutUnitaire = coutUnitaire;
+        this.quantite = quantite;
+        this.coutTransport = coutTransport;
+        this.coefficientQualite = coefficientQualite;
+    }
+
+    // Constructeur sans unique
+    public Materiel(String nom, double quantite, double coutUnitaire, double coutTransport, double coefficientQualite) {
+        super(nom);
         this.coutUnitaire = coutUnitaire;
         this.quantite = quantite;
         this.coutTransport = coutTransport;
@@ -49,6 +58,16 @@ public class Materiel extends Composant {
 
     public void setCoefficientQualite(double coefficientQualite) {
         this.coefficientQualite = coefficientQualite;
+    }
+
+    @Override
+    public String toString() {
+        return "Materiel{" +
+                "coutUnitaire=" + coutUnitaire +
+                ", quantite=" + quantite +
+                ", coutTransport=" + coutTransport +
+                ", coefficientQualite=" + coefficientQualite +
+                '}';
     }
 }
 

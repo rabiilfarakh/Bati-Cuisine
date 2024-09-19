@@ -9,8 +9,16 @@ public class MainDoeuvre extends Composant {
     private double productiviteOuvrier;
 
     // Constructeur
-    public MainDoeuvre(Integer id, String nom, double tauxTVA, TypeComposant typeComposant, Projet projet, double tauxHoraire, double heuresTravail, double productiviteOuvrier) {
-        super(id, nom, tauxTVA, typeComposant, projet);
+    public MainDoeuvre(String nom, double tauxTVA, TypeComposant typeComposant, Projet projet, double tauxHoraire, double heuresTravail, double productiviteOuvrier) {
+        super(nom, tauxTVA, typeComposant, projet);
+        this.tauxHoraire = tauxHoraire;
+        this.heuresTravail = heuresTravail;
+        this.productiviteOuvrier = productiviteOuvrier;
+    }
+
+    //Constructeur unique
+    public MainDoeuvre(String nom,double tauxHoraire, double heuresTravail, double productiviteOuvrier) {
+        super(nom);
         this.tauxHoraire = tauxHoraire;
         this.heuresTravail = heuresTravail;
         this.productiviteOuvrier = productiviteOuvrier;
@@ -39,6 +47,15 @@ public class MainDoeuvre extends Composant {
 
     public void setProductiviteOuvrier(double productiviteOuvrier) {
         this.productiviteOuvrier = productiviteOuvrier;
+    }
+
+    @Override
+    public String toString() {
+        return "MainDoeuvre{" +
+                "tauxHoraire=" + tauxHoraire +
+                ", heuresTravail=" + heuresTravail +
+                ", productiviteOuvrier=" + productiviteOuvrier +
+                '}';
     }
 }
 

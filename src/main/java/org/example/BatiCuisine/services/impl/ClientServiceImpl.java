@@ -7,6 +7,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 public class ClientServiceImpl implements ClientDao {
@@ -35,7 +37,6 @@ public class ClientServiceImpl implements ClientDao {
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
                     Client client = new Client(
-                            resultSet.getInt("id"),
                             resultSet.getString("nom"),
                             resultSet.getString("adresse"),
                             resultSet.getString("telephone"),
@@ -54,4 +55,34 @@ public class ClientServiceImpl implements ClientDao {
     public void appliquerRemise() {
 
     }
+
+    @Override
+    public Map<Integer, Client> chercherClient(String valeur) {
+        String sql = "SELECT * FROM clients c WHERE c.nom LIKE ?" +
+                " OR c.adresse LIKE ?" +
+                " OR c.telephone LIKE ?";
+        Map<Integer, Client> clientsTrouves = new HashMap<>();
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            for (int i = 1; i <= 3; i++) {
+                preparedStatement.setString(i, "%" + valeur + "%");
+            }
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    Client client = new Client(
+                            resultSet.getString("nom"),
+                            resultSet.getString("adresse"),
+                            resultSet.getString("telephone"),
+                            resultSet.getBoolean("estProfessionnel")
+                    );
+                    clientsTrouves.put(client.getId(), client);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Erreur lors de la recherche des clients : " + e.getMessage(), e);
+        }
+        return clientsTrouves;
+    }
+
 }
