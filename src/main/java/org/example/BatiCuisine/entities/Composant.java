@@ -18,7 +18,12 @@ public class Composant {
         this.projet = projet;
     }
 
-    // Constructeur sans unique
+    // Constructeur sans parametres
+    public Composant() {
+        ;
+    }
+
+    // Constructeur unique
     public Composant(String nom) {
         this.nom = nom;
     }

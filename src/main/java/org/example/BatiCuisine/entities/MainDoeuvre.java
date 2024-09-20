@@ -24,6 +24,10 @@ public class MainDoeuvre extends Composant {
         this.productiviteOuvrier = productiviteOuvrier;
     }
 
+    // Constructeur sans parametres
+    public MainDoeuvre() {
+    }
+
     // Getters et Setters
     public double getTauxHoraire() {
         return tauxHoraire;
