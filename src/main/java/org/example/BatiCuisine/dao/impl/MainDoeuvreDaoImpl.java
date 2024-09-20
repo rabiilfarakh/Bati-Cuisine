@@ -74,21 +74,6 @@ public class MainDoeuvreDaoImpl implements MainDoeuvreDao {
 
 
     @Override
-    public void modifierMainDoeuvre(MainDoeuvre mainDoeuvre) {
-        String sql = "UPDATE main_doeuvre SET nom = ?, tauxhoraire = ?, heurestravail = ?, productiviteouvrier = ? WHERE id = ?";
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setString(1, mainDoeuvre.getNom());
-            preparedStatement.setDouble(2, mainDoeuvre.getTauxHoraire());
-            preparedStatement.setDouble(3, mainDoeuvre.getHeuresTravail());
-            preparedStatement.setDouble(4, mainDoeuvre.getProductiviteOuvrier());
-            preparedStatement.setInt(5, mainDoeuvre.getId());
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException("Erreur lors de la mise à jour de la main d'œuvre : " + e.getMessage(), e);
-        }
-    }
-
-    @Override
     public void supprimerMainDoeuvre(Integer id) {
         String sql = "DELETE FROM main_d_oeuvre WHERE id = ?";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {

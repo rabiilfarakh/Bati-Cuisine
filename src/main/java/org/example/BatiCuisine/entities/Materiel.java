@@ -27,6 +27,10 @@ public class Materiel extends Composant {
         this.coefficientQualite = coefficientQualite;
     }
 
+    // Constructeur sans parametres
+    public Materiel() {
+    }
+
     // Getters et Setters
     public double getCoutUnitaire() {
         return coutUnitaire;

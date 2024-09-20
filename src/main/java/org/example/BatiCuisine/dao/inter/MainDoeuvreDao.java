@@ -7,6 +7,5 @@ import java.util.List;
 public interface MainDoeuvreDao {
     void ajouterMainDoeuvre(MainDoeuvre mainDoeuvre, Integer projetId);
     List<MainDoeuvre> afficherMainDoeuvreParProjet(Integer projetId);
-    void modifierMainDoeuvre(MainDoeuvre mainDoeuvre);
     void supprimerMainDoeuvre(Integer id);
 }
