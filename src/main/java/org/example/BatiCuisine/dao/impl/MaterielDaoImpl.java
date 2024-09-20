@@ -66,7 +66,6 @@ public class MaterielDaoImpl implements MaterielDao {
     }
 
 
-
     @Override
     public void supprimerMateriel(Integer id) {
         String sql = "DELETE FROM materiel WHERE id = ?";
