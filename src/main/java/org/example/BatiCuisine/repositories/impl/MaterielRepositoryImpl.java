@@ -13,19 +13,24 @@ import java.util.List;
 
 public class MaterielRepositoryImpl implements MaterielRepository {
 
+    private final MaterielDao materielDao;
+
+    public MaterielRepositoryImpl(MaterielDao materielDao) {
+        this.materielDao = materielDao;
+    }
 
     @Override
     public void ajouterMateriel(Materiel materiel, Integer projetId) {
-
+        materielDao.ajouterMateriel(materiel,projetId);
     }
 
     @Override
     public List<Materiel> afficherMaterielParProjet(Integer projetId) {
-        return List.of();
+        return materielDao.afficherMaterielParProjet(projetId);
     }
 
     @Override
     public void supprimerMateriel(Integer id) {
-
+        materielDao.supprimerMateriel(id);
     }
 }
