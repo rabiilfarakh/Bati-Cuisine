@@ -56,14 +56,18 @@ public class Materiel extends Composant {
     }
 
 
+
     @Override
     public String toString() {
-        return "Materiel{" +
-                "coutUnitaire=" + coutUnitaire +
-                ", quantite=" + quantite +
-                ", coutTransport=" + coutTransport +
-                ", coefficientQualite=" + coefficientQualite +
-                '}';
+        // Calcul du total incluant le coût unitaire, la quantité, le coût de transport
+        double totalHT = (coutUnitaire * quantite) + coutTransport;
+
+        // Retourne la chaîne formatée
+        return "-" + getNom() + ": " + totalHT + " £ " +
+                "(quantité: " + quantite + " m², coût unitaire: " + coutUnitaire + " £/m², qualité: " + coefficientQualite +
+                ", transport: " + coutTransport + " £)";
     }
+
+
 }
 

@@ -28,12 +28,28 @@ public class ResultatView {
         materiaux.stream()
                 .forEach(materiel -> System.out.println("- " + materiel.toString()));
 
+        double total = materiaux.stream()
+                .mapToDouble(materiel -> (materiel.getQuantite() * materiel.getCoutUnitaire())+materiel.getCoutTransport())
+                .sum();
+
+        double totalAvecTva = materiaux.stream()
+                .mapToDouble(materiel -> {
+                    double coûtTotal = (materiel.getQuantite() * materiel.getCoutUnitaire()) + materiel.getCoutTransport();
+                    double tva = coûtTotal * (materiel.getTauxTVA() / 100);
+                    return coûtTotal + tva; // Retourne le coût total incluant la TVA
+                })
+                .sum();
+
+
+        System.out.println("**Coût total des matériaux avant TVA : " + total + " €**");
+        System.out.println("**Coût total des matériaux avec TVA  : " + totalAvecTva + " €**");
+
+
         //afficher les mainDoeuvres
         System.out.println("2. Main-d'œuvre :");
         mainDoeuvres.stream()
                 .forEach(mainDoeuvre -> System.out.println("- " + mainDoeuvre.toString()));
 
 
-        System.out.println("3. Coût total avant marge : En cours");
     }
 }
