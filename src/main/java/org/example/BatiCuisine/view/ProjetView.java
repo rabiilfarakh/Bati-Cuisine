@@ -18,7 +18,7 @@ public class ProjetView {
         String nomProjet = scanner.nextLine();
         System.out.print("Entrez la surface de la cuisine (en m²) : ");
         double surface = scanner.nextDouble();
-        scanner.nextLine(); // Consomme la ligne restante
+        scanner.nextLine();
 
         projet.setNomProjet(nomProjet);
         projet.setSurface(surface);
@@ -28,51 +28,23 @@ public class ProjetView {
 
         System.out.println("--- Calcul du coût total ---\n");
 
-        System.out.print("Souhaitez-vous appliquer une TVA au projet ? (y/n) : ");
-        String reponseTVA = scanner.nextLine().trim().toLowerCase();
+        System.out.print("Souhaitez-vous appliquer une marge bénéficiaire au projet ? (y/n): ");
+        String reponseMarge = scanner.nextLine().trim().toLowerCase();
 
-        if (reponseTVA.equals("y")) {
-            System.out.print("Entrez le pourcentage de TVA (%) : ");
+        if (reponseMarge.equals("y")) {
+            System.out.print("Entrez le pourcentage de marge bénéficiaire (%) : ");
             try {
-                double tva = scanner.nextDouble();
-                projet.setTva(tva);
+                double marge = scanner.nextDouble();
+                projet.setMargeBeneficiaire(marge);
             } catch (InputMismatchException e) {
-                System.out.println("Pourcentage de TVA invalide. La TVA sera considérée comme 0.");
-                scanner.nextLine(); // Consomme la ligne restante
+                System.out.println("Pourcentage de marge bénéficiaire invalide. La marge bénéficiaire sera considérée comme 0.");
+                scanner.nextLine();
             }
-            scanner.nextLine(); // Consomme la ligne restante après nextDouble()
-
-            System.out.print("Souhaitez-vous appliquer une marge bénéficiaire au projet ? (y/n): ");
-            String reponseMarge = scanner.nextLine().trim().toLowerCase();
-
-            if (reponseMarge.equals("y")) {
-                System.out.print("Entrez le pourcentage de marge bénéficiaire (%) : ");
-                try {
-                    double marge = scanner.nextDouble();
-                    projet.setMargeBeneficiaire(marge);
-                } catch (InputMismatchException e) {
-                    System.out.println("Pourcentage de marge bénéficiaire invalide. La marge bénéficiaire sera considérée comme 0.");
-                    scanner.nextLine(); // Consomme la ligne restante
-                }
-                scanner.nextLine(); // Consomme la ligne restante
-            }
-        } else if (reponseTVA.equals("n")) {
-            System.out.print("Souhaitez-vous appliquer une marge bénéficiaire au projet ? (y/n): ");
-            String reponseMarge = scanner.nextLine().trim().toLowerCase();
-
-            if (reponseMarge.equals("y")) {
-                System.out.print("Entrez le pourcentage de marge bénéficiaire (%) : ");
-                try {
-                    double marge = scanner.nextDouble();
-                    projet.setMargeBeneficiaire(marge);
-                } catch (InputMismatchException e) {
-                    System.out.println("Pourcentage de marge bénéficiaire invalide. La marge bénéficiaire sera considérée comme 0.");
-                    scanner.nextLine(); // Consomme la ligne restante
-                }
-                scanner.nextLine(); // Consomme la ligne restante
-            }
+            scanner.nextLine();
+        } else if (reponseMarge.equals("n")) {
+            System.out.println("Aucune marge bénéficiaire ne sera appliquée.");
         } else {
-            System.out.println("Réponse invalide. La TVA et la marge bénéficiaire seront considérées comme 0.");
+            System.out.println("Réponse invalide. La marge bénéficiaire sera considérée comme 0.");
         }
 
         System.out.println("Calcul du coût en cours ...");

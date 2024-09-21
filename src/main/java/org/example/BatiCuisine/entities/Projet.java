@@ -11,18 +11,16 @@ public class Projet {
     private double margeBeneficiaire;
     private double coutTotal;
     private double surface;
-    private double tva;
     private EtatProjet etatProjet;
     private Client client;
     private List<Composant> composants;
 
     // Constructeur
-    public Projet(String nomProjet, double margeBeneficiaire, double coutTotal, double surface, double tva, EtatProjet etatProjet, Client client) {
+    public Projet(String nomProjet, double margeBeneficiaire, double coutTotal, double surface, EtatProjet etatProjet, Client client) {
         this.nomProjet = nomProjet;
         this.margeBeneficiaire = margeBeneficiaire;
         this.coutTotal = coutTotal;
         this.surface = surface;
-        this.tva = tva;
         this.etatProjet = etatProjet;
         this.client = client;
     }
@@ -69,13 +67,6 @@ public class Projet {
         this.surface = surface;
     }
 
-    public double getTva() {
-        return tva;
-    }
-
-    public void setTva(double tva) {
-        this.tva = tva;
-    }
 
     public EtatProjet getEtatProjet() {
         return etatProjet;

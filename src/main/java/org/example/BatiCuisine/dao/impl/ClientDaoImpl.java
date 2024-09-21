@@ -56,8 +56,8 @@ public class ClientDaoImpl implements ClientDao {
 
     @Override
     public void appliquerRemise() {
-
     }
+
 
     @Override
     public List<Client> chercherClient(String valeur) {
