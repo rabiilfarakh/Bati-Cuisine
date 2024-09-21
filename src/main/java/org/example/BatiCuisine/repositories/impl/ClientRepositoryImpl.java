@@ -14,25 +14,30 @@ import java.util.Optional;
 
 public class ClientRepositoryImpl implements ClientRepository {
 
+    private final ClientDao clientDao;
+
+    public ClientRepositoryImpl(ClientDao clientDao) {
+        this.clientDao = clientDao;
+    }
 
     @Override
     public void ajouterClient(Client client) {
-
+        clientDao.ajouterClient(client);
     }
 
     @Override
     public Optional<Client> afficherInformations(Integer id) {
-        return Optional.empty();
+        return clientDao.afficherInformations(id);
     }
 
     @Override
     public void appliquerRemise() {
-
+        clientDao.appliquerRemise();
     }
 
     @Override
     public List chercherClient(String valeur) {
-        return List.of();
+        return clientDao.chercherClient(valeur);
     }
 }
 

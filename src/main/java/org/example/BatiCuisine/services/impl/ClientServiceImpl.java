@@ -2,6 +2,7 @@ package org.example.BatiCuisine.services.impl;
 
 import org.example.BatiCuisine.dao.inter.ClientDao;
 import org.example.BatiCuisine.entities.Client;
+import org.example.BatiCuisine.repositories.inter.ClientRepository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,76 +12,29 @@ import java.util.*;
 
 public class ClientServiceImpl implements ClientDao {
 
-    private Connection connection;
+    private final ClientRepository clientRepository;
+
+    public ClientServiceImpl(ClientRepository clientRepository) {
+        this.clientRepository = clientRepository;
+    }
 
     @Override
     public void ajouterClient(Client client) {
-        String sql = "INSERT INTO clients (nom, adresse, telephone, estProfessionnel) values (?, ?, ?, ?)";
-        try(PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setString(1, client.getNom());
-            preparedStatement.setString(2, client.getAdresse());
-            preparedStatement.setString(3, client.getTelephone());
-            preparedStatement.setBoolean(4, client.isEstProfessionnel());
-            preparedStatement.executeUpdate();
-        }catch(SQLException e){
-            throw new RuntimeException();
-        }
+        clientRepository.ajouterClient(client);
     }
 
     @Override
     public Optional<Client> afficherInformations(Integer id) {
-        String sql = "SELECT * FROM clients WHERE id = ?";
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setInt(1, id);
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                if (resultSet.next()) {
-                    Client client = new Client(
-                            resultSet.getString("nom"),
-                            resultSet.getString("adresse"),
-                            resultSet.getString("telephone"),
-                            resultSet.getBoolean("estProfessionnel")
-                    );
-                    return Optional.of(client);
-                }
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException();
-        }
-        return Optional.empty();
+        return clientRepository.afficherInformations(id);
     }
 
     @Override
     public void appliquerRemise() {
-
+        clientRepository.appliquerRemise();
     }
 
     @Override
-    public List<Client> chercherClient(String valeur) {
-        String sql = "SELECT * FROM clients c WHERE c.nom LIKE ?" +
-                " OR c.adresse LIKE ?" +
-                " OR c.telephone LIKE ?";
-        List<Client> clientsTrouves = new ArrayList<>();
-
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            for (int i = 1; i <= 3; i++) {
-                preparedStatement.setString(i, "%" + valeur + "%");
-            }
-
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                while (resultSet.next()) {
-                    Client client = new Client(
-                            resultSet.getString("nom"),
-                            resultSet.getString("adresse"),
-                            resultSet.getString("telephone"),
-                            resultSet.getBoolean("estProfessionnel")
-                    );
-                    clientsTrouves.add(client);
-                }
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException("Erreur lors de la recherche des clients : " + e.getMessage(), e);
-        }
-        return clientsTrouves;
+    public List chercherClient(String valeur) {
+        return clientRepository.chercherClient(valeur);
     }
-
 }
