@@ -48,11 +48,12 @@ public class MainDoeuvre extends Composant {
 
     @Override
     public String toString() {
-        return "MainDoeuvre{" +
-                "tauxHoraire=" + tauxHoraire +
-                ", heuresTravail=" + heuresTravail +
-                ", productiviteOuvrier=" + productiviteOuvrier +
-                '}';
+
+        double totalHT = (tauxHoraire * heuresTravail*productiviteOuvrier) ;
+
+        // Retourne la chaîne formatée
+        return "-" + getNom() + ": " + totalHT + " £ " +
+                "(taux horaire: " + tauxHoraire + " £/h, heures travaillées: " + heuresTravail + "h, productivité: " + productiviteOuvrier ;
     }
 }
 

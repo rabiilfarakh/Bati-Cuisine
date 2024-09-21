@@ -34,12 +34,11 @@ public class ResultatView {
 
         double totalAvecTva = materiaux.stream()
                 .mapToDouble(materiel -> {
-                    double coûtTotal = (materiel.getQuantite() * materiel.getCoutUnitaire()) + materiel.getCoutTransport();
-                    double tva = coûtTotal * (materiel.getTauxTVA() / 100);
-                    return coûtTotal + tva; // Retourne le coût total incluant la TVA
+                    double coutTotal = (materiel.getQuantite() * materiel.getCoutUnitaire()) + materiel.getCoutTransport();
+                    double tva = coutTotal * (materiel.getTauxTVA() / 100);
+                    return coutTotal + tva;
                 })
                 .sum();
-
 
         System.out.println("**Coût total des matériaux avant TVA : " + total + " €**");
         System.out.println("**Coût total des matériaux avec TVA  : " + totalAvecTva + " €**");
@@ -50,6 +49,28 @@ public class ResultatView {
         mainDoeuvres.stream()
                 .forEach(mainDoeuvre -> System.out.println("- " + mainDoeuvre.toString()));
 
+        double totalMainDoeuvre = mainDoeuvres.stream()
+                .mapToDouble(main -> (main.getHeuresTravail()*main.getTauxHoraire()*main.getProductiviteOuvrier()))
+                .sum();
+
+        double totalMainDoeuvreAvecTva = mainDoeuvres.stream()
+                .mapToDouble(main -> {
+                    double coutTotal = (main.getHeuresTravail()*main.getTauxHoraire()*main.getProductiviteOuvrier());
+                    double tva = coutTotal * (main.getTauxTVA() / 100);
+                    return coutTotal + tva;
+                })
+                .sum();
+
+        System.out.println("**Coût total de la main-d'œuvre avant TVA : " + totalMainDoeuvre + " €**");
+        System.out.println("**Coût total de la main-d'œuvre avec TVA  : " + totalMainDoeuvreAvecTva + " €**");
+
+        double totaleFinale = totalMainDoeuvreAvecTva + totalAvecTva;
+        double marge = ( (totaleFinale * projet.getMargeBeneficiaire()) / 100);
+        double totaleMarge = totaleFinale + marge;
+
+        System.out.println("3. Coût total avant marge: " + totaleFinale + " €");
+        System.out.println("4. Marge bénéficiaire ("+projet.getMargeBeneficiaire()+"%): "+marge+" €");
+        System.out.println("**Coût total final du projet: "+totaleMarge+" €");
 
     }
 }
