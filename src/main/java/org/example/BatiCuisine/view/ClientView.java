@@ -4,6 +4,7 @@ import org.example.BatiCuisine.config.Database;
 import org.example.BatiCuisine.dao.impl.ClientDaoImpl;
 import org.example.BatiCuisine.dao.inter.ClientDao;
 import org.example.BatiCuisine.entities.Client;
+import org.example.BatiCuisine.entities.Projet;
 
 import java.sql.Connection;
 import java.util.*;
@@ -48,21 +49,31 @@ public class ClientView {
         System.out.println("--- Recherche de client existant ---");
         System.out.print("Entrez le nom du client : ");
         String nom = scanner.nextLine();
+
         List<Client> clientsTrouves = rechercherClient(nom);
 
         if (clientsTrouves.isEmpty()) {
             System.out.println("Client non trouvé.");
         } else {
             System.out.println("Clients trouvés :");
-            clientsTrouves.forEach(client -> System.out.println(client));
-            System.out.println("Souhaitez-vous continuer avec ce client ? (y/n) : ");
+            for (Client client : clientsTrouves) {
+                System.out.println(client);
+            }
+
+            System.out.print("Souhaitez-vous continuer avec l'un de ces clients ? (y/n) : ");
             String reponse = scanner.nextLine().trim().toLowerCase();
 
             if (reponse.equals("y")) {
-                ProjetView.creerProjet(clientsTrouves);
+
+                Client clientChoisi = clientsTrouves.get(0);
+                Projet projet = new Projet();
+                projet.setClient(clientChoisi);
+
+                ProjetView.creerProjet(projet);
             }
         }
     }
+
 
     private static List<Client> rechercherClient(String nom) {
         return clientDao.chercherClient(nom);

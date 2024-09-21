@@ -18,15 +18,6 @@ public class Materiel extends Composant {
         this.coefficientQualite = coefficientQualite;
     }
 
-    // Constructeur sans unique
-    public Materiel(String nom, double quantite, double coutUnitaire, double coutTransport, double coefficientQualite) {
-        super(nom);
-        this.coutUnitaire = coutUnitaire;
-        this.quantite = quantite;
-        this.coutTransport = coutTransport;
-        this.coefficientQualite = coefficientQualite;
-    }
-
     // Constructeur sans parametres
     public Materiel() {
     }
@@ -63,6 +54,7 @@ public class Materiel extends Composant {
     public void setCoefficientQualite(double coefficientQualite) {
         this.coefficientQualite = coefficientQualite;
     }
+
 
     @Override
     public String toString() {

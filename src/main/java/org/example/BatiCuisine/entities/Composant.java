@@ -68,5 +68,16 @@ public class Composant {
     public void setProjet(Projet projet) {
         this.projet = projet;
     }
+
+    @Override
+    public String toString() {
+        return "Composant{" +
+                "id=" + id +
+                ", nom='" + nom + '\'' +
+                ", tauxTVA=" + tauxTVA +
+                ", typeComposant=" + typeComposant +
+                ", projet=" + projet +
+                '}';
+    }
 }
 

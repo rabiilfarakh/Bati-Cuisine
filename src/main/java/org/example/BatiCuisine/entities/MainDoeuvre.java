@@ -16,14 +16,6 @@ public class MainDoeuvre extends Composant {
         this.productiviteOuvrier = productiviteOuvrier;
     }
 
-    //Constructeur unique
-    public MainDoeuvre(String nom,double tauxHoraire, double heuresTravail, double productiviteOuvrier) {
-        super(nom);
-        this.tauxHoraire = tauxHoraire;
-        this.heuresTravail = heuresTravail;
-        this.productiviteOuvrier = productiviteOuvrier;
-    }
-
     // Constructeur sans parametres
     public MainDoeuvre() {
     }
@@ -52,6 +44,7 @@ public class MainDoeuvre extends Composant {
     public void setProductiviteOuvrier(double productiviteOuvrier) {
         this.productiviteOuvrier = productiviteOuvrier;
     }
+
 
     @Override
     public String toString() {

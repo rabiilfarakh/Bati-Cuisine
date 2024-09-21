@@ -10,18 +10,23 @@ public class Projet {
     private String nomProjet;
     private double margeBeneficiaire;
     private double coutTotal;
+    private double surface;
+    private double tva;
     private EtatProjet etatProjet;
     private Client client;
     private List<Composant> composants;
 
     // Constructeur
-    public Projet(String nomProjet, double margeBeneficiaire, double coutTotal, EtatProjet etatProjet, Client client) {
+    public Projet(String nomProjet, double margeBeneficiaire, double coutTotal, double surface, double tva, EtatProjet etatProjet, Client client) {
         this.nomProjet = nomProjet;
         this.margeBeneficiaire = margeBeneficiaire;
         this.coutTotal = coutTotal;
+        this.surface = surface;
+        this.tva = tva;
         this.etatProjet = etatProjet;
         this.client = client;
     }
+    public Projet(){}
 
     // Getters et Setters
     public Integer getId() {
@@ -54,6 +59,22 @@ public class Projet {
 
     public void setCoutTotal(double coutTotal) {
         this.coutTotal = coutTotal;
+    }
+
+    public double getSurface() {
+        return surface;
+    }
+
+    public void setSurface(double surface) {
+        this.surface = surface;
+    }
+
+    public double getTva() {
+        return tva;
+    }
+
+    public void setTva(double tva) {
+        this.tva = tva;
     }
 
     public EtatProjet getEtatProjet() {
