@@ -9,4 +9,5 @@ public interface ProjetDao {
     Projet afficherProjet(Integer id);
     void supprimerProjet(Integer id);
     List<Projet> listerProjetsParClient(Integer clientId);
+    List<Projet> listerAllProjets();
 }
