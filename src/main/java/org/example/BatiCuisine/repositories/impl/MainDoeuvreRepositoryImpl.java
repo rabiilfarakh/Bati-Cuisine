@@ -14,18 +14,24 @@ import java.util.List;
 
 public class MainDoeuvreRepositoryImpl implements MainDoeuvreRepository {
 
+    private final MainDoeuvreDao mainDoeuvreDao;
+
+    public MainDoeuvreRepositoryImpl(MainDoeuvreDao mainDoeuvreDao) {
+        this.mainDoeuvreDao = mainDoeuvreDao;
+    }
+
     @Override
     public void ajouterMainDoeuvre(MainDoeuvre mainDoeuvre, Integer projetId) {
-
+        mainDoeuvreDao.ajouterMainDoeuvre(mainDoeuvre,projetId);
     }
 
     @Override
     public List<MainDoeuvre> afficherMainDoeuvreParProjet(Integer projetId) {
-        return List.of();
+        return mainDoeuvreDao.afficherMainDoeuvreParProjet(projetId);
     }
 
     @Override
     public void supprimerMainDoeuvre(Integer id) {
-
+        mainDoeuvreDao.supprimerMainDoeuvre(id);
     }
 }
