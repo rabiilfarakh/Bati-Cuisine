@@ -9,4 +9,5 @@ public interface ProjetRepository {
     Projet afficherProjet(Integer id);
     void supprimerProjet(Integer id);
     List<Projet> listerProjetsParClient(Integer clientId);
+    List<Projet> listerAllProjets();
 }

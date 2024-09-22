@@ -11,24 +11,34 @@ import java.util.List;
 
 public class ProjetRepositoryImpl implements ProjetRepository {
 
+    private final ProjetDao projetDao;
+
+    public ProjetRepositoryImpl(ProjetDao projetDao) {
+        this.projetDao = projetDao;
+    }
 
     @Override
     public void ajouterProjet(Projet projet, Integer clientId) {
-
+        projetDao.ajouterProjet(projet,clientId);
     }
 
     @Override
     public Projet afficherProjet(Integer id) {
-        return null;
+        return projetDao.afficherProjet(id);
     }
 
     @Override
     public void supprimerProjet(Integer id) {
-
+        projetDao.supprimerProjet(id);
     }
 
     @Override
     public List<Projet> listerProjetsParClient(Integer clientId) {
-        return List.of();
+        return projetDao.listerProjetsParClient(clientId);
+    }
+
+    @Override
+    public List<Projet> listerAllProjets() {
+        return projetDao.listerAllProjets();
     }
 }
