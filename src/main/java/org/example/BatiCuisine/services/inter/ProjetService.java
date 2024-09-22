@@ -5,7 +5,7 @@ import org.example.BatiCuisine.entities.Projet;
 import java.util.List;
 
 public interface ProjetService {
-    void ajouterProjet(Projet projet, Integer clientId);
+    Integer ajouterProjet(Projet projet, Integer clientId);
     Projet afficherProjet(Integer id);
     void supprimerProjet(Integer id);
     List<Projet> listerProjetsParClient(Integer clientId);

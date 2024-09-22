@@ -15,8 +15,8 @@ public class ProjetServiceImpl implements ProjetService {
     }
 
     @Override
-    public void ajouterProjet(Projet projet, Integer clientId) {
-        projetRepository.ajouterProjet(projet,clientId);
+    public Integer ajouterProjet(Projet projet, Integer clientId) {
+        return projetRepository.ajouterProjet(projet,clientId);
     }
 
     @Override

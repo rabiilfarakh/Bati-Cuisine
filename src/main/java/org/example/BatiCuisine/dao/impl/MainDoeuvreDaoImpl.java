@@ -4,10 +4,7 @@ import org.example.BatiCuisine.dao.inter.MainDoeuvreDao;
 import org.example.BatiCuisine.entities.MainDoeuvre;
 import org.example.BatiCuisine.enums.TypeComposant;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,25 +13,31 @@ public class MainDoeuvreDaoImpl implements MainDoeuvreDao {
     private Connection connection;
 
     public MainDoeuvreDaoImpl(Connection connection) {
+
         this.connection = connection;
     }
 
     @Override
-    public void ajouterMainDoeuvre(MainDoeuvre mainDoeuvre, Integer projetId) {
-        String sql = "INSERT INTO main_d_oeuvre (nom, tauxtva, typecomposant, tauxhoraire, ,heurestravail, productiviteouvrier, projet_id) VALUES (?, ?, ?, ?, ?)";
+    public void ajouterMainDoeuvre(MainDoeuvre mainDoeuvre) {
+        String sql = "INSERT INTO main_d_oeuvre (nom, tauxtva, typecomposant, projet_id, tauxhoraire, heurestravail, productiviteouvrier) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, mainDoeuvre.getNom());
             preparedStatement.setDouble(2, mainDoeuvre.getTauxTVA());
-            preparedStatement.setString(3, "Main d'Oeuvre");
-            preparedStatement.setDouble(4, mainDoeuvre.getTauxHoraire());
-            preparedStatement.setDouble(5, mainDoeuvre.getHeuresTravail());
-            preparedStatement.setDouble(6, mainDoeuvre.getProductiviteOuvrier());
-            preparedStatement.setInt(7, projetId);
+
+            // Use setObject to insert the enum directly
+            preparedStatement.setObject(3, mainDoeuvre.getTypeComposant().name(), Types.OTHER);
+
+            preparedStatement.setInt(4, mainDoeuvre.getProjet().getId());
+            preparedStatement.setDouble(5, mainDoeuvre.getTauxHoraire());
+            preparedStatement.setDouble(6, mainDoeuvre.getHeuresTravail());
+            preparedStatement.setDouble(7, mainDoeuvre.getProductiviteOuvrier());
+
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException("Erreur lors de l'ajout de la main d'œuvre : " + e.getMessage(), e);
         }
     }
+
 
     @Override
     public List<MainDoeuvre> afficherMainDoeuvreParProjet(Integer projetId) {

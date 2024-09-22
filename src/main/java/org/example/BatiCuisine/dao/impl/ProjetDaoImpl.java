@@ -8,10 +8,7 @@ import org.example.BatiCuisine.entities.Materiel;
 import org.example.BatiCuisine.enums.EtatProjet;
 import org.example.BatiCuisine.enums.TypeComposant;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,19 +21,32 @@ public class ProjetDaoImpl implements ProjetDao {
     }
 
     @Override
-    public void ajouterProjet(Projet projet, Integer clientId) {
-        String sql = "INSERT INTO projets (nomprojet, margebeneficiaire, couttotal, etatprojet, client_id) VALUES (?, ?, ?, ?, ?)";
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+    public Integer ajouterProjet(Projet projet, Integer clientId) {
+        String sql = "INSERT INTO projets (nomprojet, margebeneficiaire, couttotal, etatprojet, client_id,surface) VALUES (?, ?, ?, ?, ?,?)";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, projet.getNomProjet());
             preparedStatement.setDouble(2, projet.getMargeBeneficiaire());
             preparedStatement.setDouble(3, projet.getCoutTotal());
-            preparedStatement.setString(4, projet.getEtatProjet().name());
+            preparedStatement.setObject(4, projet.getEtatProjet().name(), Types.OTHER);
             preparedStatement.setInt(5, clientId);
+            preparedStatement.setDouble(6,projet.getSurface());
+
+            // Execute the update
             preparedStatement.executeUpdate();
+
+            // Retrieve the generated keys
+            try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    return generatedKeys.getInt(1); // Return the first generated key
+                } else {
+                    throw new SQLException("Aucune clé générée, l'insertion a échoué.");
+                }
+            }
         } catch (SQLException e) {
             throw new RuntimeException("Erreur lors de l'ajout du projet : " + e.getMessage(), e);
         }
     }
+
 
     @Override
     public Projet afficherProjet(Integer id) {

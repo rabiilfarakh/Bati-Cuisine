@@ -4,9 +4,13 @@ import org.example.BatiCuisine.entities.Client;
 import org.example.BatiCuisine.entities.MainDoeuvre;
 import org.example.BatiCuisine.entities.Materiel;
 import org.example.BatiCuisine.entities.Projet;
+import org.example.BatiCuisine.services.inter.MainDoeuvreService;
+import org.example.BatiCuisine.services.inter.MaterielService;
+import org.example.BatiCuisine.services.inter.ProjetService;
 
 import java.util.*;
 
+import static org.example.BatiCuisine.enums.EtatProjet.EN_COURS;
 import static org.example.BatiCuisine.view.ResultatView.result;
 
 public class ProjetView {
@@ -45,6 +49,20 @@ public class ProjetView {
             System.out.println("Aucune marge bénéficiaire ne sera appliquée.");
         } else {
             System.out.println("Réponse invalide. La marge bénéficiaire sera considérée comme 0.");
+        }
+
+
+        projet.setEtatProjet(EN_COURS);
+        projet.setId(MainView.getProjetService().ajouterProjet(projet,projet.getClient().getId())) ;
+
+        // insert mainDoeuvre
+        for (MainDoeuvre mainDoeuvre : mainDoeuvres) {
+            MainView.getMainDoeuvreService().ajouterMainDoeuvre(mainDoeuvre);
+        }
+
+        // insert materiaux
+        for (Materiel materiel : materiels) {
+            MainView.getMaterielService().ajouterMateriel(materiel);
         }
 
         System.out.println("Calcul du coût en cours ...");

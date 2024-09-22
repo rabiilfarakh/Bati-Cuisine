@@ -15,8 +15,8 @@ public class MainDoeuvreServiceImpl implements MainDoeuvreService {
     }
 
     @Override
-    public void ajouterMainDoeuvre(MainDoeuvre mainDoeuvre, Integer projetId) {
-        mainDoeuvreRepository.ajouterMainDoeuvre(mainDoeuvre,projetId);
+    public void ajouterMainDoeuvre(MainDoeuvre mainDoeuvre) {
+        mainDoeuvreRepository.ajouterMainDoeuvre(mainDoeuvre);
     }
 
     @Override

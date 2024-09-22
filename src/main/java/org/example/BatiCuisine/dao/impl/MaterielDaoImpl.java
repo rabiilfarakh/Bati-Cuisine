@@ -3,10 +3,7 @@ package org.example.BatiCuisine.dao.impl;
 import org.example.BatiCuisine.dao.inter.MaterielDao;
 import org.example.BatiCuisine.entities.Materiel;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,17 +16,21 @@ public class MaterielDaoImpl implements MaterielDao {
     }
 
     @Override
-    public void ajouterMateriel(Materiel materiel, Integer projetId) {
-        String sql = "INSERT INTO materiaux (nom, tauxtva ,typecomposant ,coutunitaire, quantite, couttransport, coefficientqualite, projet_id) VALUES (?, ?, ?, ?, ?, ?)";
+    public void ajouterMateriel(Materiel materiel) {
+        String sql = "INSERT INTO materiaux (nom, tauxtva, typecomposant, coutunitaire, quantite, couttransport, coefficientqualite, projet_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, materiel.getNom());
             preparedStatement.setDouble(2, materiel.getTauxTVA());
-            preparedStatement.setString(3, "Materiel");
+
+            // Use setObject for the enum
+            preparedStatement.setObject(3, materiel.getTypeComposant().name(), Types.OTHER);
+
             preparedStatement.setDouble(4, materiel.getCoutUnitaire());
             preparedStatement.setDouble(5, materiel.getQuantite());
             preparedStatement.setDouble(6, materiel.getCoutTransport());
             preparedStatement.setDouble(7, materiel.getCoefficientQualite());
-            preparedStatement.setInt(8, projetId);
+            preparedStatement.setInt(8, materiel.getProjet().getId());
+
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException("Erreur lors de l'ajout du matériel : " + e.getMessage(), e);

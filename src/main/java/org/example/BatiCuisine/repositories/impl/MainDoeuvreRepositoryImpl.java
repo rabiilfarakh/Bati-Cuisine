@@ -21,8 +21,8 @@ public class MainDoeuvreRepositoryImpl implements MainDoeuvreRepository {
     }
 
     @Override
-    public void ajouterMainDoeuvre(MainDoeuvre mainDoeuvre, Integer projetId) {
-        mainDoeuvreDao.ajouterMainDoeuvre(mainDoeuvre,projetId);
+    public void ajouterMainDoeuvre(MainDoeuvre mainDoeuvre) {
+        mainDoeuvreDao.ajouterMainDoeuvre(mainDoeuvre);
     }
 
     @Override

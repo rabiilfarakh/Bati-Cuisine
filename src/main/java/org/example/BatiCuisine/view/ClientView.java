@@ -3,6 +3,10 @@ package org.example.BatiCuisine.view;
 import org.example.BatiCuisine.entities.Client;
 import org.example.BatiCuisine.entities.Projet;
 import org.example.BatiCuisine.services.inter.ClientService;
+import org.example.BatiCuisine.services.inter.MainDoeuvreService;
+import org.example.BatiCuisine.services.inter.MaterielService;
+import org.example.BatiCuisine.services.inter.ProjetService;
+
 import java.util.*;
 
 public class ClientView {
@@ -11,7 +15,7 @@ public class ClientView {
     private static final List<Client> clients = new ArrayList<>();
 
 
-    public static Client rechercherOuAjouterClient(ClientService clientService) {
+    public static Client rechercherOuAjouterClient() {
         System.out.println("--- Recherche de client ---");
         System.out.println("Souhaitez-vous chercher un client existant ou en ajouter un nouveau ?");
         System.out.println("1. Chercher un client existant");
@@ -30,22 +34,22 @@ public class ClientView {
 
         switch (choix) {
             case 1:
-                rechercherClientEtContinuer(clientService);
+                rechercherClientEtContinuer();
                 return null;
             case 2:
-                return ajouterClient(clientService);
+                return ajouterClient();
             default:
                 System.out.println("Option invalide.");
                 return null;
         }
     }
 
-    private static void rechercherClientEtContinuer(ClientService clientService) {
+    private static void rechercherClientEtContinuer() {
         System.out.println("--- Recherche de client existant ---");
         System.out.print("Entrez le nom du client : ");
         String nom = scanner.nextLine();
 
-        List<Client> clientsTrouves = rechercherClient(clientService,nom);
+        List<Client> clientsTrouves = rechercherClient(nom);
 
         if (clientsTrouves.isEmpty()) {
             System.out.println("Client non trouvé.");
@@ -70,11 +74,11 @@ public class ClientView {
     }
 
 
-    private static List<Client> rechercherClient(ClientService clientService , String nom) {
-        return clientService.chercherClient(nom);
+    private static List<Client> rechercherClient(String nom) {
+        return MainView.getClientService().chercherClient(nom);
     }
 
-    private static Client ajouterClient(ClientService clientService) {
+    private static Client ajouterClient() {
         System.out.print("Entrez le nom du client : ");
         String nom = scanner.nextLine();
         System.out.print("Entrez l'adresse du client : ");
@@ -93,7 +97,7 @@ public class ClientView {
         }
 
         Client client = new Client(nom, adresse, telephone, estProfessionnel);
-        clientService.ajouterClient(client);
+        MainView.getClientService().ajouterClient(client);
 
         System.out.println("Client ajouté avec succès !");
         return client;

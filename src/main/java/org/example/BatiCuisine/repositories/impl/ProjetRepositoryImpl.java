@@ -18,8 +18,8 @@ public class ProjetRepositoryImpl implements ProjetRepository {
     }
 
     @Override
-    public void ajouterProjet(Projet projet, Integer clientId) {
-        projetDao.ajouterProjet(projet,clientId);
+    public Integer ajouterProjet(Projet projet, Integer clientId) {
+        return projetDao.ajouterProjet(projet,clientId);
     }
 
     @Override

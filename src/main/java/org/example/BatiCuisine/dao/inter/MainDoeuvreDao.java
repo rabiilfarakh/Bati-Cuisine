@@ -5,7 +5,7 @@ import org.example.BatiCuisine.entities.MainDoeuvre;
 import java.util.List;
 
 public interface MainDoeuvreDao {
-    void ajouterMainDoeuvre(MainDoeuvre mainDoeuvre, Integer projetId);
+    void ajouterMainDoeuvre(MainDoeuvre mainDoeuvre);
     List<MainDoeuvre> afficherMainDoeuvreParProjet(Integer projetId);
     void supprimerMainDoeuvre(Integer id);
 }

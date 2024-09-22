@@ -9,6 +9,7 @@ import org.example.BatiCuisine.dao.inter.ClientDao;
 import org.example.BatiCuisine.dao.inter.MainDoeuvreDao;
 import org.example.BatiCuisine.dao.inter.MaterielDao;
 import org.example.BatiCuisine.dao.inter.ProjetDao;
+import org.example.BatiCuisine.entities.Projet;
 import org.example.BatiCuisine.repositories.impl.ClientRepositoryImpl;
 import org.example.BatiCuisine.repositories.impl.MainDoeuvreRepositoryImpl;
 import org.example.BatiCuisine.repositories.impl.MaterielRepositoryImpl;
@@ -25,7 +26,6 @@ import org.example.BatiCuisine.services.inter.ClientService;
 import org.example.BatiCuisine.services.inter.MainDoeuvreService;
 import org.example.BatiCuisine.services.inter.MaterielService;
 import org.example.BatiCuisine.services.inter.ProjetService;
-import org.example.BatiCuisine.entities.Projet;
 
 import java.sql.Connection;
 import java.util.List;
@@ -34,41 +34,43 @@ import java.util.Scanner;
 public class MainView {
 
     private static final Scanner scanner = new Scanner(System.in);
-    private final ProjetService projetService;
-    private final ClientService clientService;
-    private final MainDoeuvreService mainDoeuvreService;
-    private final MaterielService materielService;
+
+    // Static service instances
+    private static ProjetService projetService;
+    private static ClientService clientService;
+    private static MainDoeuvreService mainDoeuvreService;
+    private static MaterielService materielService;
 
     public MainView() {
         // Connection
         Connection connection = Database.getInstance().getConnection();
 
-        // Instances
+        // Initialize static service instances
         projetService = createProjetService(connection);
         mainDoeuvreService = createMainDoeuvreService(connection);
         materielService = createMaterielService(connection);
         clientService = createClientService(connection);
     }
 
-    private ProjetService createProjetService(Connection connection) {
+    private static ProjetService createProjetService(Connection connection) {
         ProjetDao projetDao = new ProjetDaoImpl(connection);
         ProjetRepository projetRepository = new ProjetRepositoryImpl(projetDao);
         return new ProjetServiceImpl(projetRepository);
     }
 
-    private MainDoeuvreService createMainDoeuvreService(Connection connection) {
+    private static MainDoeuvreService createMainDoeuvreService(Connection connection) {
         MainDoeuvreDao mainDoeuvreDao = new MainDoeuvreDaoImpl(connection);
         MainDoeuvreRepository mainDoeuvreRepository = new MainDoeuvreRepositoryImpl(mainDoeuvreDao);
         return new MainDoeuvreServiceImpl(mainDoeuvreRepository);
     }
 
-    private MaterielService createMaterielService(Connection connection) {
+    private static MaterielService createMaterielService(Connection connection) {
         MaterielDao materielDao = new MaterielDaoImpl(connection);
         MaterielRepository materielRepository = new MaterielRepositoryImpl(materielDao);
         return new MaterielServiceImpl(materielRepository);
     }
 
-    private ClientService createClientService(Connection connection) {
+    private static ClientService createClientService(Connection connection) {
         ClientDao clientDao = new ClientDaoImpl(connection);
         ClientRepository clientRepository = new ClientRepositoryImpl(clientDao);
         return new ClientServiceImpl(clientRepository);
@@ -88,7 +90,7 @@ public class MainView {
 
             switch (choix) {
                 case 1:
-                    ClientView.rechercherOuAjouterClient(clientService);
+                    ClientView.rechercherOuAjouterClient();
                     break;
                 case 2:
                     System.out.println("Affichage des projets existants...");
@@ -96,7 +98,6 @@ public class MainView {
                     for (Projet projet : projets) {
                         System.out.println(projet);
                     }
-
                     break;
                 case 3:
                     System.out.println("Calculer le coût d'un projet en cours...");
@@ -110,5 +111,22 @@ public class MainView {
                     System.out.println("Option invalide.");
             }
         }
+    }
+
+    // Static getters for services
+    public static ProjetService getProjetService() {
+        return projetService;
+    }
+
+    public static ClientService getClientService() {
+        return clientService;
+    }
+
+    public static MainDoeuvreService getMainDoeuvreService() {
+        return mainDoeuvreService;
+    }
+
+    public static MaterielService getMaterielService() {
+        return materielService;
     }
 }
