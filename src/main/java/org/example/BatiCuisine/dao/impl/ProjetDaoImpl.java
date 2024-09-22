@@ -6,6 +6,7 @@ import org.example.BatiCuisine.entities.Projet;
 import org.example.BatiCuisine.entities.MainDoeuvre;
 import org.example.BatiCuisine.entities.Materiel;
 import org.example.BatiCuisine.enums.EtatProjet;
+import org.example.BatiCuisine.enums.TypeComposant;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -122,35 +123,71 @@ public class ProjetDaoImpl implements ProjetDao {
         }
         return projets;
     }
+
+
     @Override
     public List<Projet> listerAllProjets() {
         List<Projet> projets = new ArrayList<>();
-        String sql = "SELECT p.nomprojet, p.margebeneficiaire, p.couttotal, p.etatprojet, " +
-                "c.nom AS client_nom, c.adresse AS client_adresse, p.surface " +
+        String sql = "SELECT p.*, " +
+                "c.nom AS client_nom, c.adresse AS client_adresse, " +
+                "m.nom AS materiau_nom, m.tauxtva, m.typecomposant, m.projet_id, m.coutunitaire, m.quantite, " +
+                "m.couttransport, m.coefficientqualite, " +
+                "mo.nom AS main_oeuvre_nom, mo.tauxtva AS mo_tauxtva, mo.typecomposant AS mo_typecomposant, " +
+                "mo.projet_id AS mo_projet_id, mo.tauxhoraire, mo.heurestravail, mo.productiviteouvrier " +
                 "FROM projets p " +
-                "JOIN clients c ON p.client_id = c.id";
+                "JOIN clients c ON p.client_id = c.id " +
+                "JOIN materiaux m ON m.projet_id = p.id " +
+                "JOIN main_d_oeuvre mo ON mo.projet_id = p.id";
+
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             ResultSet resultSet = preparedStatement.executeQuery();
+
             while (resultSet.next()) {
-                // Récupérer les informations du projet
                 String nomProjet = resultSet.getString("nomprojet");
                 double margeBeneficiaire = resultSet.getDouble("margebeneficiaire");
                 double coutTotal = resultSet.getDouble("couttotal");
+                double surface = resultSet.getDouble("surface");
                 String etatProjetStr = resultSet.getString("etatprojet");
                 EtatProjet etatProjet = EtatProjet.valueOf(etatProjetStr);
-                double surface = resultSet.getDouble("surface");
 
-                // Récupérer les informations du client
                 String clientNom = resultSet.getString("client_nom");
                 String clientAdresse = resultSet.getString("client_adresse");
-
-                // Créer le projet et le client
                 Client client = new Client();
                 client.setNom(clientNom);
                 client.setAdresse(clientAdresse);
 
-                // Ajouter le projet à la liste
-                projets.add(new Projet(nomProjet, margeBeneficiaire, coutTotal, surface, etatProjet, client, new ArrayList<>(), new ArrayList<>()));
+                // Create lists for materials and labor
+                List<Materiel> materielList = new ArrayList<>();
+                List<MainDoeuvre> mainDoeuvreList = new ArrayList<>();
+
+                // Material details
+                String materiauNom = resultSet.getString("materiau_nom");
+                if (materiauNom != null) {
+                    Materiel materiel = new Materiel();
+                    materiel.setNom(materiauNom);
+                    materiel.setTauxTVA(resultSet.getDouble("tauxtva"));
+                    materiel.setTypeComposant(TypeComposant.valueOf(resultSet.getString("typecomposant"))); // Enum conversion
+                    materiel.setCoutUnitaire(resultSet.getDouble("coutunitaire"));
+                    materiel.setQuantite(resultSet.getInt("quantite"));
+                    materiel.setCoutTransport(resultSet.getDouble("couttransport"));
+                    materiel.setCoefficientQualite(resultSet.getDouble("coefficientqualite"));
+                    materielList.add(materiel);
+                }
+
+                // Labor details
+                String mainOeuvreNom = resultSet.getString("main_oeuvre_nom");
+                if (mainOeuvreNom != null) {
+                    MainDoeuvre mainDoeuvre = new MainDoeuvre();
+                    mainDoeuvre.setNom(mainOeuvreNom);
+                    mainDoeuvre.setTauxTVA(resultSet.getDouble("mo_tauxtva"));
+                    mainDoeuvre.setTypeComposant(TypeComposant.valueOf(resultSet.getString("mo_typecomposant")));
+                    mainDoeuvre.setTauxHoraire(resultSet.getDouble("tauxhoraire"));
+                    mainDoeuvre.setHeuresTravail(resultSet.getInt("heurestravail"));
+                    mainDoeuvre.setProductiviteOuvrier(resultSet.getDouble("productiviteouvrier"));
+                    mainDoeuvreList.add(mainDoeuvre);
+                }
+
+                projets.add(new Projet(nomProjet, margeBeneficiaire, coutTotal, surface, etatProjet, client, mainDoeuvreList, materielList));
             }
         } catch (SQLException e) {
             throw new RuntimeException("Erreur lors de la récupération de tous les projets : " + e.getMessage(), e);

@@ -3,6 +3,7 @@ package org.example.BatiCuisine.services.impl;
 import org.example.BatiCuisine.dao.inter.ClientDao;
 import org.example.BatiCuisine.entities.Client;
 import org.example.BatiCuisine.repositories.inter.ClientRepository;
+import org.example.BatiCuisine.services.inter.ClientService;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,7 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
-public class ClientServiceImpl implements ClientDao {
+public class ClientServiceImpl implements ClientService {
 
     private final ClientRepository clientRepository;
 

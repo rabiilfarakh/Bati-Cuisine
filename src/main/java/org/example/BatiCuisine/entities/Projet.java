@@ -27,6 +27,8 @@ public class Projet {
         this.materiel = materiel;
     }
 
+    public Projet(){}
+
     public Integer getId() {
         return id;
     }
@@ -98,6 +100,20 @@ public class Projet {
     public void setMateriel(List<Materiel> materiel) {
         this.materiel = materiel;
     }
+
+    @Override
+    public String toString() {
+        return "Projet{" +
+                "  nomProjet='" + nomProjet + '\'' +
+                "  surface=" + surface +
+                "  margeBeneficiaire=" + margeBeneficiaire +
+                "  coutTotal=" + coutTotal +
+                "  etatProjet=" + etatProjet + "}\n" +
+                client + "\n" +
+                "MainDoeuvre{" + mainDoeuvre + "}\n" +
+                "Materiel{ " + materiel + "}\n\n";
+    }
+
 }
 
 

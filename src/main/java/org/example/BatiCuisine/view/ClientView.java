@@ -1,22 +1,17 @@
 package org.example.BatiCuisine.view;
 
-import org.example.BatiCuisine.config.Database;
-import org.example.BatiCuisine.dao.impl.ClientDaoImpl;
-import org.example.BatiCuisine.dao.inter.ClientDao;
 import org.example.BatiCuisine.entities.Client;
 import org.example.BatiCuisine.entities.Projet;
-
-import java.sql.Connection;
+import org.example.BatiCuisine.services.inter.ClientService;
 import java.util.*;
 
 public class ClientView {
+
     private static final Scanner scanner = new Scanner(System.in);
     private static final List<Client> clients = new ArrayList<>();
 
-    private static final Connection connection = Database.getInstance().getConnection();
-    private static final ClientDao clientDao = new ClientDaoImpl(connection);
 
-    public static Client rechercherOuAjouterClient() {
+    public static Client rechercherOuAjouterClient(ClientService clientService) {
         System.out.println("--- Recherche de client ---");
         System.out.println("Souhaitez-vous chercher un client existant ou en ajouter un nouveau ?");
         System.out.println("1. Chercher un client existant");
@@ -35,22 +30,22 @@ public class ClientView {
 
         switch (choix) {
             case 1:
-                rechercherClientEtContinuer();
+                rechercherClientEtContinuer(clientService);
                 return null;
             case 2:
-                return ajouterClient();
+                return ajouterClient(clientService);
             default:
                 System.out.println("Option invalide.");
                 return null;
         }
     }
 
-    private static void rechercherClientEtContinuer() {
+    private static void rechercherClientEtContinuer(ClientService clientService) {
         System.out.println("--- Recherche de client existant ---");
         System.out.print("Entrez le nom du client : ");
         String nom = scanner.nextLine();
 
-        List<Client> clientsTrouves = rechercherClient(nom);
+        List<Client> clientsTrouves = rechercherClient(clientService,nom);
 
         if (clientsTrouves.isEmpty()) {
             System.out.println("Client non trouvé.");
@@ -75,11 +70,11 @@ public class ClientView {
     }
 
 
-    private static List<Client> rechercherClient(String nom) {
-        return clientDao.chercherClient(nom);
+    private static List<Client> rechercherClient(ClientService clientService , String nom) {
+        return clientService.chercherClient(nom);
     }
 
-    private static Client ajouterClient() {
+    private static Client ajouterClient(ClientService clientService) {
         System.out.print("Entrez le nom du client : ");
         String nom = scanner.nextLine();
         System.out.print("Entrez l'adresse du client : ");
@@ -98,7 +93,7 @@ public class ClientView {
         }
 
         Client client = new Client(nom, adresse, telephone, estProfessionnel);
-        clientDao.ajouterClient(client);
+        clientService.ajouterClient(client);
 
         System.out.println("Client ajouté avec succès !");
         return client;

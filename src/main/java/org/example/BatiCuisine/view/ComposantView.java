@@ -1,6 +1,5 @@
 package org.example.BatiCuisine.view;
 
-import org.example.BatiCuisine.entities.Client;
 import org.example.BatiCuisine.entities.MainDoeuvre;
 import org.example.BatiCuisine.entities.Materiel;
 import org.example.BatiCuisine.entities.Projet;
