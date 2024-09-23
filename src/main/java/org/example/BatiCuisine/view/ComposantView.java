@@ -4,7 +4,7 @@ import org.example.BatiCuisine.entities.MainDoeuvre;
 import org.example.BatiCuisine.entities.Materiel;
 import org.example.BatiCuisine.entities.Projet;
 import org.example.BatiCuisine.enums.TypeComposant;
-import org.example.BatiCuisine.utils.ValidationUtil;
+import org.example.BatiCuisine.util.ValidationUtil;
 
 import java.util.*;
 

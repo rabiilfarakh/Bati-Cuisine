@@ -1,4 +1,4 @@
-package org.example.BatiCuisine.utils;
+package org.example.BatiCuisine.util;
 
 import java.util.regex.Pattern;
 
@@ -13,7 +13,7 @@ public class ValidationUtil {
     }
 
     public static boolean estTelephoneValide(String telephone) {
-        String regex = "\\d{10}"; // Exemple pour un numéro de 10 chiffres
+        String regex = "\\d{10}";
         return telephone != null && Pattern.matches(regex, telephone);
     }
 

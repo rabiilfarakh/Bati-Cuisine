@@ -1,13 +1,9 @@
 package org.example.BatiCuisine.view;
 
-import org.example.BatiCuisine.entities.Client;
 import org.example.BatiCuisine.entities.MainDoeuvre;
 import org.example.BatiCuisine.entities.Materiel;
 import org.example.BatiCuisine.entities.Projet;
-import org.example.BatiCuisine.services.inter.MainDoeuvreService;
-import org.example.BatiCuisine.services.inter.MaterielService;
-import org.example.BatiCuisine.services.inter.ProjetService;
-import org.example.BatiCuisine.view.MainView;
+
 
 import java.util.*;
 

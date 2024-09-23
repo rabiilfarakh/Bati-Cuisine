@@ -1,10 +1,9 @@
 package org.example.BatiCuisine.view;
 
-import org.example.BatiCuisine.entities.Devis;
 import org.example.BatiCuisine.entities.MainDoeuvre;
 import org.example.BatiCuisine.entities.Materiel;
 import org.example.BatiCuisine.entities.Projet;
-import org.example.BatiCuisine.utils.ValidationUtil;
+import org.example.BatiCuisine.util.ValidationUtil;
 
 import java.util.List;
 import java.util.Scanner;

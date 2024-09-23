@@ -14,7 +14,6 @@ public class Projet {
     private Client client;
 
 
-
     public Projet(String nomProjet, double margeBeneficiaire, double coutTotal, double surface, EtatProjet etatProjet, Client client) {
         this.nomProjet = nomProjet;
         this.margeBeneficiaire = margeBeneficiaire;
@@ -22,7 +21,16 @@ public class Projet {
         this.surface = surface;
         this.etatProjet = etatProjet;
         this.client = client;
+    }
 
+    public Projet(Integer id, String nomProjet, double margeBeneficiaire, double coutTotal, double surface, EtatProjet etatProjet, Client client) {
+        this.id = id;
+        this.nomProjet = nomProjet;
+        this.margeBeneficiaire = margeBeneficiaire;
+        this.coutTotal = coutTotal;
+        this.surface = surface;
+        this.etatProjet = etatProjet;
+        this.client = client;
     }
 
     public Projet(){}
