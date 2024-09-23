@@ -21,6 +21,10 @@ public class Devis {
         this.projet = projet;
     }
 
+    public Devis(){
+
+    }
+
     // Getters et Setters
     public Integer getId() {
         return id;

@@ -1,5 +1,6 @@
 package org.example.BatiCuisine.view;
 
+import org.example.BatiCuisine.entities.Devis;
 import org.example.BatiCuisine.entities.MainDoeuvre;
 import org.example.BatiCuisine.entities.Materiel;
 import org.example.BatiCuisine.entities.Projet;
@@ -47,6 +48,8 @@ public class ResultatView {
         System.out.println("3. Coût total avant marge: " + totalFinal + " €");
         System.out.println("4. Marge bénéficiaire (" + projet.getMargeBeneficiaire() + "%): " + marge + " €");
         System.out.println("**Coût total final du projet: " + totalFinalAvecMarge + " €**");
+
+        DevisView.enregistrerDevis(projet);
     }
 
     // Fonction pour calculer le coût total des matériaux
