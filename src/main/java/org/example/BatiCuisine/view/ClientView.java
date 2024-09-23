@@ -2,18 +2,15 @@ package org.example.BatiCuisine.view;
 
 import org.example.BatiCuisine.entities.Client;
 import org.example.BatiCuisine.entities.Projet;
-import org.example.BatiCuisine.services.inter.ClientService;
 import org.example.BatiCuisine.services.inter.MainDoeuvreService;
 import org.example.BatiCuisine.services.inter.MaterielService;
 import org.example.BatiCuisine.services.inter.ProjetService;
+import org.example.BatiCuisine.utils.ValidationUtil;
 
 import java.util.*;
 
 public class ClientView {
-
     private static final Scanner scanner = new Scanner(System.in);
-    private static final List<Client> clients = new ArrayList<>();
-
 
     public static Client rechercherOuAjouterClient() {
         System.out.println("--- Recherche de client ---");
@@ -63,38 +60,40 @@ public class ClientView {
             String reponse = scanner.nextLine().trim().toLowerCase();
 
             if (reponse.equals("y")) {
-
                 Client clientChoisi = clientsTrouves.get(0);
                 Projet projet = new Projet();
                 projet.setClient(clientChoisi);
-
                 ProjetView.creerProjet(projet);
             }
         }
     }
-
 
     private static List<Client> rechercherClient(String nom) {
         return MainView.getClientService().chercherClient(nom);
     }
 
     private static Client ajouterClient() {
-        System.out.print("Entrez le nom du client : ");
-        String nom = scanner.nextLine();
-        System.out.print("Entrez l'adresse du client : ");
-        String adresse = scanner.nextLine();
-        System.out.print("Entrez le numéro de téléphone : ");
-        String telephone = scanner.nextLine();
-        System.out.print("Le client est-il un professionnel ? (true/false) : ");
+        String nom, adresse, telephone;
         boolean estProfessionnel;
-        try {
-            estProfessionnel = scanner.nextBoolean();
-            scanner.nextLine();
-        } catch (Exception e) {
-            System.out.println("Réponse invalide. La valeur par défaut sera false.");
-            estProfessionnel = false;
-            scanner.nextLine();
-        }
+
+        do {
+            System.out.print("Entrez le nom du client : ");
+            nom = scanner.nextLine();
+        } while (!ValidationUtil.estNomValide(nom));
+
+        do {
+            System.out.print("Entrez l'adresse du client : ");
+            adresse = scanner.nextLine();
+        } while (!ValidationUtil.estAdresseValide(adresse));
+
+        do {
+            System.out.print("Entrez le numéro de téléphone : ");
+            telephone = scanner.nextLine();
+        } while (!ValidationUtil.estTelephoneValide(telephone));
+
+        System.out.print("Le client est-il un professionnel ? (true/false) : ");
+        estProfessionnel = scanner.nextBoolean();
+        scanner.nextLine();
 
         Client client = new Client(nom, adresse, telephone, estProfessionnel);
         MainView.getClientService().ajouterClient(client);

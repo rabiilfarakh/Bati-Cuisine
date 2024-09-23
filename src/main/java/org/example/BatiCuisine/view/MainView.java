@@ -85,13 +85,17 @@ public class MainView {
                 case 2:
                     System.out.println("Affichage des projets existants...");
                     List<Projet> projets = projetService.listerAllProjets();
-                    for (Projet projet : projets) {
-                        System.out.println(projet);
+                    if (projets.isEmpty()) {
+                        System.out.println("Aucun projet trouvé.");
+                    } else {
+                        for (Projet projet : projets) {
+                            System.out.println(projet);
+                        }
                     }
                     break;
                 case 3:
-                    System.out.println("Calculer le coût d'un projet en cours...");
-                    // CalculView.calculerCoutProjet();
+                    System.out.println("Calculer le coût d'un projet...");
+
                     break;
                 case 4:
                     System.out.println("Au revoir !");

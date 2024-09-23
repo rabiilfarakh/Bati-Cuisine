@@ -4,45 +4,58 @@ import org.example.BatiCuisine.entities.MainDoeuvre;
 import org.example.BatiCuisine.entities.Materiel;
 import org.example.BatiCuisine.entities.Projet;
 import org.example.BatiCuisine.enums.TypeComposant;
+import org.example.BatiCuisine.utils.ValidationUtil;
 
 import java.util.*;
 
 public class ComposantView {
     private static final Scanner scanner = new Scanner(System.in);
 
-    public static List<MainDoeuvre> ajouterMainDoeuvre(Projet projet){
-
+    public static List<MainDoeuvre> ajouterMainDoeuvre(Projet projet) {
         List<MainDoeuvre> mainDoeuvres = new ArrayList<>();
 
         System.out.println("--- Ajout de la main-d'œuvre ---");
         while (true) {
-            System.out.print("Entrez le type de main-d'œuvre (e.g., Ouvrier de base, Spécialiste) : ");
-            String nomMainDoeuvre = scanner.nextLine();
+            String nomMainDoeuvre;
+            double tauxHoraire, facteurProd, tva;
+            Integer nbrHeures;
 
-            System.out.print("Entrez le taux horaire de cette main-d'œuvre (€/h) : ");
-            double tauxHoraire = scanner.nextDouble();
-            scanner.nextLine();
+            do {
+                System.out.print("Entrez le type de main-d'œuvre : ");
+                nomMainDoeuvre = scanner.nextLine();
+            } while (!ValidationUtil.estNomValide(nomMainDoeuvre));
 
-            System.out.print("Entrez le nombre d'heures travaillées : ");
-            Integer nbrHeures = scanner.nextInt();
-            scanner.nextLine();
+            do {
+                System.out.print("Entrez le taux horaire de cette main-d'œuvre (€/h) : ");
+                tauxHoraire = scanner.nextDouble();
+                scanner.nextLine();
+            } while (!ValidationUtil.estTauxHoraireValide(tauxHoraire));
 
-            System.out.print("Entrez le facteur de productivité (1.0 = standard, > 1.0 = haute productivité) : ");
-            double facteurProd = scanner.nextDouble();
-            scanner.nextLine();
+            do {
+                System.out.print("Entrez le nombre d'heures travaillées : ");
+                nbrHeures = scanner.nextInt();
+                scanner.nextLine();
+            } while (nbrHeures == null || nbrHeures <= 0);
 
-            System.out.print("Entrez TVA : ");
-            double tva = scanner.nextDouble();
-            scanner.nextLine();
+            do {
+                System.out.print("Entrez le facteur de productivité : ");
+                facteurProd = scanner.nextDouble();
+                scanner.nextLine();
+            } while (facteurProd <= 0);
 
-            MainDoeuvre mainDoeuvre = new MainDoeuvre(nomMainDoeuvre,tva,TypeComposant.MAIN_D_OEUVRE,projet,tauxHoraire, nbrHeures, facteurProd);
+            do {
+                System.out.print("Entrez TVA : ");
+                tva = scanner.nextDouble();
+                scanner.nextLine();
+            } while (tva < 0);
 
-            if(mainDoeuvres.add(mainDoeuvre)){
+            MainDoeuvre mainDoeuvre = new MainDoeuvre(nomMainDoeuvre, tva, TypeComposant.MAIN_D_OEUVRE, projet, tauxHoraire, nbrHeures, facteurProd);
+
+            if (mainDoeuvres.add(mainDoeuvre)) {
                 System.out.println("Main-d'œuvre ajoutée avec succès !");
-            }else{
-                System.out.println("Probléme d'ajout de Main-d'œuvre");
+            } else {
+                System.out.println("Problème d'ajout de Main-d'œuvre");
             }
-
 
             System.out.print("Voulez-vous ajouter un autre type de main-d'œuvre ? (y/n) : ");
             if (scanner.nextLine().equalsIgnoreCase("n")) {
@@ -51,35 +64,50 @@ public class ComposantView {
         }
     }
 
-
     public static List<Materiel> ajouterComposants(Projet projet) {
         List<Materiel> materiaux = new ArrayList<>();
 
         System.out.println("--- Ajout des matériaux ---");
         while (true) {
-            System.out.print("Entrez le nom du matériau : ");
-            String nomMateril = scanner.nextLine();
-            System.out.print("Entrez la quantité de ce matériau : ");
-            double quantite = scanner.nextDouble();
-            scanner.nextLine();
+            String nomMateriel;
+            double quantite, coutUnitaire, coutTransport, coefficientQualite, tva;
 
-            System.out.print("Entrez le coût unitaire de ce matériau : ");
-            double coutUnitaire = scanner.nextDouble();
-            scanner.nextLine();
+            do {
+                System.out.print("Entrez le nom du matériau : ");
+                nomMateriel = scanner.nextLine();
+            } while (!ValidationUtil.estNomValide(nomMateriel));
 
-            System.out.print("Entrez le coût de transport de ce matériau : ");
-            double coutTransport = scanner.nextDouble();
-            scanner.nextLine();
+            do {
+                System.out.print("Entrez la quantité de ce matériau : ");
+                quantite = scanner.nextDouble();
+                scanner.nextLine();
+            } while (!ValidationUtil.estQuantiteValide(quantite));
 
-            System.out.print("Entrez le coefficient de qualité (1.0 = standard, > 1.0 = haute qualité) : ");
-            double coefficientQualite = scanner.nextDouble();
-            scanner.nextLine();
+            do {
+                System.out.print("Entrez le coût unitaire de ce matériau : ");
+                coutUnitaire = scanner.nextDouble();
+                scanner.nextLine();
+            } while (coutUnitaire < 0);
 
-            System.out.print("Entrez TVA : ");
-            double tva = scanner.nextDouble();
-            scanner.nextLine();
+            do {
+                System.out.print("Entrez le coût de transport de ce matériau : ");
+                coutTransport = scanner.nextDouble();
+                scanner.nextLine();
+            } while (coutTransport < 0);
 
-            Materiel materiel = new Materiel(nomMateril, tva, TypeComposant.MATERIAUX ,projet,quantite, coutUnitaire, coutTransport, coefficientQualite);
+            do {
+                System.out.print("Entrez le coefficient de qualité : ");
+                coefficientQualite = scanner.nextDouble();
+                scanner.nextLine();
+            } while (coefficientQualite <= 0);
+
+            do {
+                System.out.print("Entrez TVA : ");
+                tva = scanner.nextDouble();
+                scanner.nextLine();
+            } while (tva < 0);
+
+            Materiel materiel = new Materiel(nomMateriel, tva, TypeComposant.MATERIAUX, projet, quantite, coutUnitaire, coutTransport, coefficientQualite);
 
             if (materiaux.add(materiel)) {
                 System.out.println("Matériau ajouté avec succès !");
@@ -92,5 +120,5 @@ public class ComposantView {
                 return materiaux;
             }
         }
-}
+    }
 }

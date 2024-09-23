@@ -4,6 +4,7 @@ import org.example.BatiCuisine.entities.Devis;
 import org.example.BatiCuisine.entities.MainDoeuvre;
 import org.example.BatiCuisine.entities.Materiel;
 import org.example.BatiCuisine.entities.Projet;
+import org.example.BatiCuisine.utils.ValidationUtil;
 
 import java.util.List;
 import java.util.Scanner;
@@ -13,6 +14,16 @@ public class ResultatView {
     private static final Scanner scanner = new Scanner(System.in);
 
     public static void result(Projet projet, List<Materiel> materiaux, List<MainDoeuvre> mainDoeuvres) {
+        // Validation des entrées
+        if (!ValidationUtil.estNomValide(projet.getNomProjet())) {
+            System.out.println("Nom de projet invalide.");
+            return;
+        }
+        if (projet.getClient() == null || !ValidationUtil.estNomValide(projet.getClient().getNom())) {
+            System.out.println("Client invalide.");
+            return;
+        }
+
         System.out.println("--- Résultat du Calcul ---");
         System.out.println("Nom du projet : " + projet.getNomProjet());
         System.out.println("Client : " + projet.getClient().getNom());
@@ -21,7 +32,11 @@ public class ResultatView {
 
         System.out.println("--- Détail des Coûts ---");
         System.out.println("1. Matériaux :");
-        materiaux.forEach(materiel -> System.out.println("- " + materiel.toString()));
+        if (materiaux.isEmpty()) {
+            System.out.println("Aucun matériau ajouté.");
+        } else {
+            materiaux.forEach(materiel -> System.out.println("- " + materiel.toString()));
+        }
 
         // Calcul des coûts des matériaux
         double totalMateriaux = calculerCoutTotalMateriaux(materiaux);
@@ -32,7 +47,11 @@ public class ResultatView {
 
         // Calcul des coûts de la main-d'œuvre
         System.out.println("2. Main-d'œuvre :");
-        mainDoeuvres.forEach(mainDoeuvre -> System.out.println("- " + mainDoeuvre.toString()));
+        if (mainDoeuvres.isEmpty()) {
+            System.out.println("Aucune main-d'œuvre ajoutée.");
+        } else {
+            mainDoeuvres.forEach(mainDoeuvre -> System.out.println("- " + mainDoeuvre.toString()));
+        }
 
         double totalMainDoeuvre = calculerCoutTotalMainDoeuvre(mainDoeuvres);
         double totalMainDoeuvreAvecTVA = calculerCoutTotalMainDoeuvreAvecTVA(mainDoeuvres);
@@ -97,6 +116,6 @@ public class ResultatView {
         double totalMain = calculerCoutTotalMainDoeuvreAvecTVA(mainDoeuvres);
         double totalMateriaux = calculerCoutTotalMateriauxAvecTVA(materiels);
         double totale = totalMain + totalMateriaux;
-        return totale + calculerMarge(totale,projet.getMargeBeneficiaire());
+        return totale + calculerMarge(totale, projet.getMargeBeneficiaire());
     }
 }

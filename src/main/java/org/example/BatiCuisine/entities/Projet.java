@@ -87,15 +87,24 @@ public class Projet {
 
     @Override
     public String toString() {
-        return "Projet{" +
-                "  nomProjet='" + nomProjet + '\'' +
-                "  surface=" + surface +
-                "  margeBeneficiaire=" + margeBeneficiaire +
-                "  coutTotal=" + coutTotal +
-                "  etatProjet=" + etatProjet + "}\n" +
-                client + "\n" ;
+        return String.format(
+                "+-------------------+------------------------+-------------------+---------+---------------------+------------+----------------+\n" +
+                        "| Nom du Client     | Adresse                | Nom du Projet     | Surface | Marge Bénéficiaire  | Coût Total | État du Projet |\n" +
+                        "+-------------------+------------------------+-------------------+---------+---------------------+------------+----------------+\n" +
+                        "| %-17s | %-22s | %-17s | %-7.2f | %-19.2f | %-10.2f | %-14s |\n" +
+                        "+-------------------+------------------------+-------------------+---------+---------------------+------------+----------------+\n",
+                client.getNom(),
+                client.getAdresse(),
+                nomProjet,
+                surface,
+                margeBeneficiaire,
+                coutTotal,
+                etatProjet
+        );
     }
 
-}
+
+    }
+
 
 

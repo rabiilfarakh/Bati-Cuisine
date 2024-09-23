@@ -71,10 +71,17 @@ public class Client {
 
     @Override
     public String toString() {
-        return "Client{ " +
-                "  nom='" + nom + '\'' +
-                ", adresse='" + adresse + '\'' +
-                ", estProfessionnel=" + estProfessionnel +
-                '}';
+        return String.format(
+                "+-------------------+-----------------+--------------------+\n" +
+                        "| Nom               | Adresse         | Professionnel      |\n" +
+                        "+-------------------+-----------------+--------------------+\n" +
+                        "| %-17s | %-15s | %-18s |\n" +
+                        "+-------------------+-----------------+--------------------+\n",
+                nom,
+                adresse,
+                estProfessionnel ? "Oui" : "Non"
+        );
     }
+
+
 }
