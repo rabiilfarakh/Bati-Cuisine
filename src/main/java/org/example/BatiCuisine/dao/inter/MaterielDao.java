@@ -5,7 +5,7 @@ import org.example.BatiCuisine.entities.Materiel;
 import java.util.List;
 
 public interface MaterielDao {
-    void ajouterMateriel(Materiel materiel);
+    void ajouterMateriels(List<Materiel> materiaux);
     List<Materiel> afficherMaterielParProjet(Integer projetId);
     void supprimerMateriel(Integer id);
 }

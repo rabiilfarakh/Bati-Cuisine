@@ -20,8 +20,8 @@ public class MaterielRepositoryImpl implements MaterielRepository {
     }
 
     @Override
-    public void ajouterMateriel(Materiel materiel) {
-        materielDao.ajouterMateriel(materiel);
+    public void ajouterMateriels(List<Materiel> materiaux) {
+        materielDao.ajouterMateriels(materiaux);
     }
 
     @Override

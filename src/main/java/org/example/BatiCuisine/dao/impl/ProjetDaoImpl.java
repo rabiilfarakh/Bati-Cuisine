@@ -76,7 +76,7 @@ public class ProjetDaoImpl implements ProjetDao {
                 client.setNom(clientNom);
                 client.setAdresse(clientAdresse);
 
-                return new Projet(nomProjet, margeBeneficiaire, coutTotal, surface, etatProjet, client, new ArrayList<>(), new ArrayList<>());
+                return new Projet(nomProjet, margeBeneficiaire, coutTotal, surface, etatProjet, client);
             }
         } catch (SQLException e) {
             throw new RuntimeException("Erreur lors de l'affichage du projet : " + e.getMessage(), e);
@@ -125,7 +125,7 @@ public class ProjetDaoImpl implements ProjetDao {
                 client.setNom(clientNom);
                 client.setAdresse(clientAdresse);
 
-                Projet projet = new Projet(nomProjet, margeBeneficiaire, coutTotal, surface, etatProjet, client, new ArrayList<>(), new ArrayList<>());
+                Projet projet = new Projet(nomProjet, margeBeneficiaire, coutTotal, surface, etatProjet, client);
                 projets.add(projet);
             }
         } catch (SQLException e) {
@@ -197,7 +197,7 @@ public class ProjetDaoImpl implements ProjetDao {
                     mainDoeuvreList.add(mainDoeuvre);
                 }
 
-                projets.add(new Projet(nomProjet, margeBeneficiaire, coutTotal, surface, etatProjet, client, mainDoeuvreList, materielList));
+                projets.add(new Projet(nomProjet, margeBeneficiaire, coutTotal, surface, etatProjet, client));
             }
         } catch (SQLException e) {
             throw new RuntimeException("Erreur lors de la récupération de tous les projets : " + e.getMessage(), e);

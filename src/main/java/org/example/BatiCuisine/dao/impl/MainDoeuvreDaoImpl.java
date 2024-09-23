@@ -18,25 +18,47 @@ public class MainDoeuvreDaoImpl implements MainDoeuvreDao {
     }
 
     @Override
-    public void ajouterMainDoeuvre(MainDoeuvre mainDoeuvre) {
+    public void ajouterMainDoeuvres(List<MainDoeuvre> mainDoeuvres) {
         String sql = "INSERT INTO main_d_oeuvre (nom, tauxtva, typecomposant, projet_id, tauxhoraire, heurestravail, productiviteouvrier) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setString(1, mainDoeuvre.getNom());
-            preparedStatement.setDouble(2, mainDoeuvre.getTauxTVA());
+            // Désactiver l'auto-commit pour exécuter tout en une fois
+            connection.setAutoCommit(false);
 
-            // Use setObject to insert the enum directly
-            preparedStatement.setObject(3, mainDoeuvre.getTypeComposant().name(), Types.OTHER);
+            for (MainDoeuvre mainDoeuvre : mainDoeuvres) {
+                preparedStatement.setString(1, mainDoeuvre.getNom());
+                preparedStatement.setDouble(2, mainDoeuvre.getTauxTVA());
+                preparedStatement.setObject(3, mainDoeuvre.getTypeComposant().name(), Types.OTHER);
+                preparedStatement.setInt(4, mainDoeuvre.getProjet().getId());
+                preparedStatement.setDouble(5, mainDoeuvre.getTauxHoraire());
+                preparedStatement.setDouble(6, mainDoeuvre.getHeuresTravail());
+                preparedStatement.setDouble(7, mainDoeuvre.getProductiviteOuvrier());
 
-            preparedStatement.setInt(4, mainDoeuvre.getProjet().getId());
-            preparedStatement.setDouble(5, mainDoeuvre.getTauxHoraire());
-            preparedStatement.setDouble(6, mainDoeuvre.getHeuresTravail());
-            preparedStatement.setDouble(7, mainDoeuvre.getProductiviteOuvrier());
+                // Ajouter l'instruction à la batch
+                preparedStatement.addBatch();
+            }
 
-            preparedStatement.executeUpdate();
+            // Exécuter la batch
+            preparedStatement.executeBatch();
+            connection.commit();
+
         } catch (SQLException e) {
-            throw new RuntimeException("Erreur lors de l'ajout de la main d'œuvre : " + e.getMessage(), e);
+            try {
+                // Si une erreur survient, annuler les changements
+                connection.rollback();
+            } catch (SQLException rollbackException) {
+                throw new RuntimeException("Erreur lors du rollback : " + rollbackException.getMessage(), rollbackException);
+            }
+            throw new RuntimeException("Erreur lors de l'ajout de la main-d'œuvre : " + e.getMessage(), e);
+        } finally {
+            try {
+                // Réactiver l'auto-commit
+                connection.setAutoCommit(true);
+            } catch (SQLException e) {
+                throw new RuntimeException("Erreur lors de la réactivation de l'auto-commit : " + e.getMessage(), e);
+            }
         }
     }
+
 
 
     @Override

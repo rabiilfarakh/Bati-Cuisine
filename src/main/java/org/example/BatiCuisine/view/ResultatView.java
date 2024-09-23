@@ -11,8 +11,7 @@ public class ResultatView {
 
     private static final Scanner scanner = new Scanner(System.in);
 
-    public static void result(Projet projet, List<Materiel> materiaux, List<MainDoeuvre> mainDoeuvres){
-
+    public static void result(Projet projet, List<Materiel> materiaux, List<MainDoeuvre> mainDoeuvres) {
         System.out.println("--- Résultat du Calcul ---");
         System.out.println("Nom du projet : " + projet.getNomProjet());
         System.out.println("Client : " + projet.getClient().getNom());
@@ -21,54 +20,80 @@ public class ResultatView {
 
         System.out.println("--- Détail des Coûts ---");
         System.out.println("1. Matériaux :");
+        materiaux.forEach(materiel -> System.out.println("- " + materiel.toString()));
 
-        //afficher les materiaux
-        materiaux.stream()
-                .forEach(materiel -> System.out.println("- " + materiel.toString()));
+        // Calcul des coûts des matériaux
+        double totalMateriaux = calculerCoutTotalMateriaux(materiaux);
+        double totalMateriauxAvecTVA = calculerCoutTotalMateriauxAvecTVA(materiaux);
 
-        double total = materiaux.stream()
-                .mapToDouble(materiel -> (materiel.getQuantite() * materiel.getCoutUnitaire())+materiel.getCoutTransport())
+        System.out.println("**Coût total des matériaux avant TVA : " + totalMateriaux + " €**");
+        System.out.println("**Coût total des matériaux avec TVA  : " + totalMateriauxAvecTVA + " €**");
+
+        // Calcul des coûts de la main-d'œuvre
+        System.out.println("2. Main-d'œuvre :");
+        mainDoeuvres.forEach(mainDoeuvre -> System.out.println("- " + mainDoeuvre.toString()));
+
+        double totalMainDoeuvre = calculerCoutTotalMainDoeuvre(mainDoeuvres);
+        double totalMainDoeuvreAvecTVA = calculerCoutTotalMainDoeuvreAvecTVA(mainDoeuvres);
+
+        System.out.println("**Coût total de la main-d'œuvre avant TVA : " + totalMainDoeuvre + " €**");
+        System.out.println("**Coût total de la main-d'œuvre avec TVA  : " + totalMainDoeuvreAvecTVA + " €**");
+
+        // Calcul final avec marge bénéficiaire
+        double totalFinal = totalMateriauxAvecTVA + totalMainDoeuvreAvecTVA;
+        double marge = calculerMarge(totalFinal, projet.getMargeBeneficiaire());
+        double totalFinalAvecMarge = totalFinal + marge;
+
+        System.out.println("3. Coût total avant marge: " + totalFinal + " €");
+        System.out.println("4. Marge bénéficiaire (" + projet.getMargeBeneficiaire() + "%): " + marge + " €");
+        System.out.println("**Coût total final du projet: " + totalFinalAvecMarge + " €**");
+    }
+
+    // Fonction pour calculer le coût total des matériaux
+    public static double calculerCoutTotalMateriaux(List<Materiel> materiaux) {
+        return materiaux.stream()
+                .mapToDouble(materiel -> (materiel.getQuantite() * materiel.getCoutUnitaire()) + materiel.getCoutTransport())
                 .sum();
+    }
 
-        double totalAvecTva = materiaux.stream()
+    // Fonction pour calculer le coût total des matériaux avec TVA
+    public static double calculerCoutTotalMateriauxAvecTVA(List<Materiel> materiaux) {
+        return materiaux.stream()
                 .mapToDouble(materiel -> {
                     double coutTotal = (materiel.getQuantite() * materiel.getCoutUnitaire()) + materiel.getCoutTransport();
                     double tva = coutTotal * (materiel.getTauxTVA() / 100);
                     return coutTotal + tva;
                 })
                 .sum();
+    }
 
-        System.out.println("**Coût total des matériaux avant TVA : " + total + " €**");
-        System.out.println("**Coût total des matériaux avec TVA  : " + totalAvecTva + " €**");
-
-
-        //afficher les mainDoeuvres
-        System.out.println("2. Main-d'œuvre :");
-        mainDoeuvres.stream()
-                .forEach(mainDoeuvre -> System.out.println("- " + mainDoeuvre.toString()));
-
-        double totalMainDoeuvre = mainDoeuvres.stream()
-                .mapToDouble(main -> (main.getHeuresTravail()*main.getTauxHoraire()*main.getProductiviteOuvrier()))
+    // Fonction pour calculer le coût total de la main-d'œuvre
+    public static double calculerCoutTotalMainDoeuvre(List<MainDoeuvre> mainDoeuvres) {
+        return mainDoeuvres.stream()
+                .mapToDouble(main -> (main.getHeuresTravail() * main.getTauxHoraire() * main.getProductiviteOuvrier()))
                 .sum();
+    }
 
-        double totalMainDoeuvreAvecTva = mainDoeuvres.stream()
+    // Fonction pour calculer le coût total de la main-d'œuvre avec TVA
+    public static double calculerCoutTotalMainDoeuvreAvecTVA(List<MainDoeuvre> mainDoeuvres) {
+        return mainDoeuvres.stream()
                 .mapToDouble(main -> {
-                    double coutTotal = (main.getHeuresTravail()*main.getTauxHoraire()*main.getProductiviteOuvrier());
+                    double coutTotal = (main.getHeuresTravail() * main.getTauxHoraire() * main.getProductiviteOuvrier());
                     double tva = coutTotal * (main.getTauxTVA() / 100);
                     return coutTotal + tva;
                 })
                 .sum();
+    }
 
-        System.out.println("**Coût total de la main-d'œuvre avant TVA : " + totalMainDoeuvre + " €**");
-        System.out.println("**Coût total de la main-d'œuvre avec TVA  : " + totalMainDoeuvreAvecTva + " €**");
+    // Fonction pour calculer la marge bénéficiaire
+    public static double calculerMarge(double total, double pourcentageMarge) {
+        return ((total) * pourcentageMarge) / 100;
+    }
 
-        double totaleFinale = totalMainDoeuvreAvecTva + totalAvecTva;
-        double marge = ( (totaleFinale * projet.getMargeBeneficiaire()) / 100);
-        double totaleMarge = totaleFinale + marge;
-
-        System.out.println("3. Coût total avant marge: " + totaleFinale + " €");
-        System.out.println("4. Marge bénéficiaire ("+projet.getMargeBeneficiaire()+"%): "+marge+" €");
-        System.out.println("**Coût total final du projet: "+totaleMarge+" €");
-
+    public static double calculerCoutTotalProjet(Projet projet, List<Materiel> materiels, List<MainDoeuvre> mainDoeuvres) {
+        double totalMain = calculerCoutTotalMainDoeuvreAvecTVA(mainDoeuvres);
+        double totalMateriaux = calculerCoutTotalMateriauxAvecTVA(materiels);
+        double totale = totalMain + totalMateriaux;
+        return totale + calculerMarge(totale,projet.getMargeBeneficiaire());
     }
 }

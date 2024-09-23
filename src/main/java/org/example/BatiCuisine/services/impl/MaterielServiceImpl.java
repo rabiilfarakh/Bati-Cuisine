@@ -16,8 +16,8 @@ public class MaterielServiceImpl implements MaterielService {
     }
 
     @Override
-    public void ajouterMateriel(Materiel materiel) {
-        materielRepository.ajouterMateriel(materiel);
+    public void ajouterMateriels(List<Materiel> materiaux) {
+        materielRepository.ajouterMateriels(materiaux);
     }
 
     @Override

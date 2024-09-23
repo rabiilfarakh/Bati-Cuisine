@@ -16,26 +16,48 @@ public class MaterielDaoImpl implements MaterielDao {
     }
 
     @Override
-    public void ajouterMateriel(Materiel materiel) {
+    public void ajouterMateriels(List<Materiel> materiaux) {
         String sql = "INSERT INTO materiaux (nom, tauxtva, typecomposant, coutunitaire, quantite, couttransport, coefficientqualite, projet_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setString(1, materiel.getNom());
-            preparedStatement.setDouble(2, materiel.getTauxTVA());
+            // Désactiver l'auto-commit pour valider le batch en une seule fois
+            connection.setAutoCommit(false);
 
-            // Use setObject for the enum
-            preparedStatement.setObject(3, materiel.getTypeComposant().name(), Types.OTHER);
+            for (Materiel materiel : materiaux) {
+                preparedStatement.setString(1, materiel.getNom());
+                preparedStatement.setDouble(2, materiel.getTauxTVA());
+                preparedStatement.setObject(3, materiel.getTypeComposant().name(), Types.OTHER);
+                preparedStatement.setDouble(4, materiel.getCoutUnitaire());
+                preparedStatement.setDouble(5, materiel.getQuantite());
+                preparedStatement.setDouble(6, materiel.getCoutTransport());
+                preparedStatement.setDouble(7, materiel.getCoefficientQualite());
+                preparedStatement.setInt(8, materiel.getProjet().getId());
 
-            preparedStatement.setDouble(4, materiel.getCoutUnitaire());
-            preparedStatement.setDouble(5, materiel.getQuantite());
-            preparedStatement.setDouble(6, materiel.getCoutTransport());
-            preparedStatement.setDouble(7, materiel.getCoefficientQualite());
-            preparedStatement.setInt(8, materiel.getProjet().getId());
+                // Ajouter l'instruction à la batch
+                preparedStatement.addBatch();
+            }
 
-            preparedStatement.executeUpdate();
+            // Exécuter la batch et valider les modifications
+            preparedStatement.executeBatch();
+            connection.commit();
+
         } catch (SQLException e) {
-            throw new RuntimeException("Erreur lors de l'ajout du matériel : " + e.getMessage(), e);
+            try {
+                // En cas d'erreur, rollback pour annuler toutes les modifications
+                connection.rollback();
+            } catch (SQLException rollbackException) {
+                throw new RuntimeException("Erreur lors du rollback : " + rollbackException.getMessage(), rollbackException);
+            }
+            throw new RuntimeException("Erreur lors de l'ajout des matériaux : " + e.getMessage(), e);
+        } finally {
+            try {
+                // Réactiver l'auto-commit une fois le batch terminé
+                connection.setAutoCommit(true);
+            } catch (SQLException e) {
+                throw new RuntimeException("Erreur lors de la réactivation de l'auto-commit : " + e.getMessage(), e);
+            }
         }
     }
+
 
     @Override
     public List<Materiel> afficherMaterielParProjet(Integer projetId) {
@@ -48,6 +70,7 @@ public class MaterielDaoImpl implements MaterielDao {
                     Materiel materiel = new Materiel();
 
                     // Remplir l'objet materiel avec les données du ResultSet
+
                     materiel.setId(resultSet.getInt("id"));
                     materiel.setNom(resultSet.getString("nom"));
                     materiel.setTauxTVA(resultSet.getDouble("tauxtva"));

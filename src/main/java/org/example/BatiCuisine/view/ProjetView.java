@@ -7,6 +7,7 @@ import org.example.BatiCuisine.entities.Projet;
 import org.example.BatiCuisine.services.inter.MainDoeuvreService;
 import org.example.BatiCuisine.services.inter.MaterielService;
 import org.example.BatiCuisine.services.inter.ProjetService;
+import org.example.BatiCuisine.view.MainView;
 
 import java.util.*;
 
@@ -53,17 +54,16 @@ public class ProjetView {
 
 
         projet.setEtatProjet(EN_COURS);
+        double totale = ResultatView.calculerCoutTotalProjet(projet,materiels,mainDoeuvres);
+        projet.setCoutTotal(totale);
         projet.setId(MainView.getProjetService().ajouterProjet(projet,projet.getClient().getId())) ;
 
         // insert mainDoeuvre
-        for (MainDoeuvre mainDoeuvre : mainDoeuvres) {
-            MainView.getMainDoeuvreService().ajouterMainDoeuvre(mainDoeuvre);
-        }
+            MainView.getMainDoeuvreService().ajouterMainDoeuvres(mainDoeuvres);
 
         // insert materiaux
-        for (Materiel materiel : materiels) {
-            MainView.getMaterielService().ajouterMateriel(materiel);
-        }
+            MainView.getMaterielService().ajouterMateriels(materiels);
+
 
         System.out.println("Calcul du coût en cours ...");
         result(projet, materiels, mainDoeuvres);

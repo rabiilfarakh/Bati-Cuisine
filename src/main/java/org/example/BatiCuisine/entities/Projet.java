@@ -12,19 +12,17 @@ public class Projet {
     private double surface;
     private EtatProjet etatProjet;
     private Client client;
-    private List<MainDoeuvre> mainDoeuvre;
-    private List<Materiel> materiel;
 
 
-    public Projet(String nomProjet, double margeBeneficiaire, double coutTotal, double surface, EtatProjet etatProjet, Client client, List<MainDoeuvre> mainDoeuvre, List<Materiel> materiel) {
+
+    public Projet(String nomProjet, double margeBeneficiaire, double coutTotal, double surface, EtatProjet etatProjet, Client client) {
         this.nomProjet = nomProjet;
         this.margeBeneficiaire = margeBeneficiaire;
         this.coutTotal = coutTotal;
         this.surface = surface;
         this.etatProjet = etatProjet;
         this.client = client;
-        this.mainDoeuvre = mainDoeuvre;
-        this.materiel = materiel;
+
     }
 
     public Projet(){}
@@ -85,21 +83,7 @@ public class Projet {
         this.client = client;
     }
 
-    public List<MainDoeuvre> getMainDoeuvre() {
-        return mainDoeuvre;
-    }
 
-    public void setMainDoeuvre(List<MainDoeuvre> mainDoeuvre) {
-        this.mainDoeuvre = mainDoeuvre;
-    }
-
-    public List<Materiel> getMateriel() {
-        return materiel;
-    }
-
-    public void setMateriel(List<Materiel> materiel) {
-        this.materiel = materiel;
-    }
 
     @Override
     public String toString() {
@@ -109,9 +93,7 @@ public class Projet {
                 "  margeBeneficiaire=" + margeBeneficiaire +
                 "  coutTotal=" + coutTotal +
                 "  etatProjet=" + etatProjet + "}\n" +
-                client + "\n" +
-                "MainDoeuvre{" + mainDoeuvre + "}\n" +
-                "Materiel{ " + materiel + "}\n\n";
+                client + "\n" ;
     }
 
 }
