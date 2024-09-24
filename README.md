@@ -3,6 +3,11 @@
 ## Description
 **Bati-Cuisine** est une application console en Java conçue pour aider les professionnels de la construction et de la rénovation de cuisines à estimer les coûts des projets. Elle permet la gestion des clients, des matériaux, de la main-d'œuvre, et la génération de devis.
 
+
+## Diagramme de classe
+![Use case diagram (6)](https://github.com/user-attachments/assets/dfb0a39b-7401-442e-80fc-618fda83f33b)
+
+
 ## Fonctionnalités
 
 ### 1. Gestion des Projets
