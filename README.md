@@ -5,7 +5,7 @@
 
 
 ## Diagramme de classe
-![Use case diagram (5)](https://github.com/user-attachments/assets/a3a2b05f-b79b-424c-81c7-e34ab8298b48)
+![Use case diagram (6)](https://github.com/user-attachments/assets/dfb0a39b-7401-442e-80fc-618fda83f33b)
 
 
 ## Fonctionnalités
