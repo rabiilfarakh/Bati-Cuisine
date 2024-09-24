@@ -50,39 +50,88 @@ public class ProjetDaoImpl implements ProjetDao {
 
     @Override
     public Projet afficherProjet(Integer id) {
-        String sql = "SELECT p.nomprojet, p.margebeneficiaire, p.couttotal, p.etatprojet, " +
-                "c.nom AS client_nom, c.adresse AS client_adresse, p.surface " +
+        String sql = "SELECT p.id AS projet_id, p.nomprojet, p.margebeneficiaire, p.couttotal, p.surface, p.etatprojet, " +
+                "c.nom AS nom_client, " +
+                "m.id AS materiel_id, m.nom AS materiel_nom, m.tauxTVA AS materiel_tauxTVA, m.coutUnitaire AS materiel_coutUnitaire, " +
+                "m.quantite AS materiel_quantite, m.coutTransport AS materiel_coutTransport, m.coefficientQualite AS materiel_coefficientQualite, " +
+                "md.id AS mainDoeuvre_id, md.nom AS mainDoeuvre_nom, md.tauxTVA AS mainDoeuvre_tauxTVA, " +
+                "md.tauxHoraire AS mainDoeuvre_tauxHoraire, md.heuresTravail AS mainDoeuvre_heuresTravail, " +
+                "md.productiviteOuvrier AS mainDoeuvre_productiviteOuvrier " +
                 "FROM projets p " +
-                "JOIN clients c ON p.client_id = c.id " +
+                "JOIN clients c ON c.id = p.client_id " +
+                "LEFT JOIN materiaux m ON m.projet_id = p.id " +
+                "LEFT JOIN main_d_oeuvre md ON md.projet_id = p.id " +
                 "WHERE p.id = ?";
+
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
-            if (resultSet.next()) {
-                // Récupérer les informations du projet
-                String nomProjet = resultSet.getString("nomprojet");
-                double margeBeneficiaire = resultSet.getDouble("margebeneficiaire");
-                double coutTotal = resultSet.getDouble("couttotal");
-                String etatProjetStr = resultSet.getString("etatprojet");
-                EtatProjet etatProjet = EtatProjet.valueOf(etatProjetStr);
-                double surface = resultSet.getDouble("surface");
 
-                // Récupérer les informations du client
-                String clientNom = resultSet.getString("client_nom");
-                String clientAdresse = resultSet.getString("client_adresse");
+            Projet projet = null;
+            List<Materiel> materiels = new ArrayList<>();
+            List<MainDoeuvre> mainDoeuvres = new ArrayList<>();
 
-                // Créer le projet et le client
-                Client client = new Client();
-                client.setNom(clientNom);
-                client.setAdresse(clientAdresse);
+            while (resultSet.next()) {
+                // Initialize projet only once
+                if (projet == null) {
+                    Integer idProjet = resultSet.getInt("projet_id");
+                    String nomProjet = resultSet.getString("nomprojet");
+                    double margeBeneficiaire = resultSet.getDouble("margebeneficiaire");
+                    double coutTotal = resultSet.getDouble("couttotal");
+                    double surface = resultSet.getDouble("surface");
+                    EtatProjet etatProjet = EtatProjet.valueOf(resultSet.getString("etatprojet"));
+                    String nomClient = resultSet.getString("nom_client");
 
-                return new Projet(nomProjet, margeBeneficiaire, coutTotal, surface, etatProjet, client);
+                    Client client = new Client();
+                    client.setNom(nomClient);
+                    // Set additional properties for client if available
+
+                    projet = new Projet(idProjet, nomProjet, margeBeneficiaire, coutTotal, surface, etatProjet, client);
+                }
+
+                // Add materiel if it exists
+                if (resultSet.getObject("materiel_id") != null) {
+                    Materiel materiel = new Materiel(
+                            resultSet.getString("materiel_nom"),
+                            resultSet.getDouble("materiel_tauxTVA"),
+                            TypeComposant.MATERIAUX,
+                            projet,
+                            resultSet.getDouble("materiel_coutUnitaire"),
+                            resultSet.getInt("materiel_quantite"),
+                            resultSet.getDouble("materiel_coutTransport"),
+                            resultSet.getDouble("materiel_coefficientQualite")
+                    );
+                    materiels.add(materiel);
+                }
+
+                // Add mainDoeuvre if it exists
+                if (resultSet.getObject("mainDoeuvre_id") != null) {
+                    MainDoeuvre mainDoeuvre = new MainDoeuvre(
+                            resultSet.getString("mainDoeuvre_nom"),
+                            resultSet.getDouble("mainDoeuvre_tauxTVA"),
+                            TypeComposant.MAIN_D_OEUVRE,
+                            projet,
+                            resultSet.getDouble("mainDoeuvre_tauxHoraire"),
+                            resultSet.getInt("mainDoeuvre_heuresTravail"),
+                            resultSet.getDouble("mainDoeuvre_productiviteOuvrier")
+                    );
+                    mainDoeuvres.add(mainDoeuvre);
+                }
             }
+
+            if (projet != null) {
+                projet.setMateriels(materiels);
+                projet.setMainDoeuvres(mainDoeuvres);
+            }
+
+            return projet;
         } catch (SQLException e) {
             throw new RuntimeException("Erreur lors de l'affichage du projet : " + e.getMessage(), e);
         }
-        return null;
     }
+
+
+
 
 
     @Override
@@ -99,7 +148,7 @@ public class ProjetDaoImpl implements ProjetDao {
     @Override
     public List<Projet> listerProjetsParClient(Integer clientId) {
         List<Projet> projets = new ArrayList<>();
-        String sql = "SELECT p.nomprojet, p.margebeneficiaire, p.couttotal, p.etatprojet, " +
+        String sql = "SELECT p.id ,p.nomprojet, p.margebeneficiaire, p.couttotal, p.etatprojet, " +
                 "c.nom AS client_nom, c.adresse AS client_adresse, p.surface " +
                 "FROM projets p " +
                 "JOIN clients c ON p.client_id = c.id " +
@@ -109,6 +158,7 @@ public class ProjetDaoImpl implements ProjetDao {
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 // Récupérer les informations du projet
+                Integer id = resultSet.getInt("id");
                 String nomProjet = resultSet.getString("nomprojet");
                 double margeBeneficiaire = resultSet.getDouble("margebeneficiaire");
                 double coutTotal = resultSet.getDouble("couttotal");
@@ -125,7 +175,7 @@ public class ProjetDaoImpl implements ProjetDao {
                 client.setNom(clientNom);
                 client.setAdresse(clientAdresse);
 
-                Projet projet = new Projet(nomProjet, margeBeneficiaire, coutTotal, surface, etatProjet, client);
+                Projet projet = new Projet(id,nomProjet, margeBeneficiaire, coutTotal, surface, etatProjet, client);
                 projets.add(projet);
             }
         } catch (SQLException e) {
@@ -153,6 +203,7 @@ public class ProjetDaoImpl implements ProjetDao {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
+                Integer id = resultSet.getInt("id");
                 String nomProjet = resultSet.getString("nomprojet");
                 double margeBeneficiaire = resultSet.getDouble("margebeneficiaire");
                 double coutTotal = resultSet.getDouble("couttotal");
@@ -197,7 +248,7 @@ public class ProjetDaoImpl implements ProjetDao {
                     mainDoeuvreList.add(mainDoeuvre);
                 }
 
-                projets.add(new Projet(nomProjet, margeBeneficiaire, coutTotal, surface, etatProjet, client));
+                projets.add(new Projet(id,nomProjet, margeBeneficiaire, coutTotal, surface, etatProjet, client));
             }
         } catch (SQLException e) {
             throw new RuntimeException("Erreur lors de la récupération de tous les projets : " + e.getMessage(), e);

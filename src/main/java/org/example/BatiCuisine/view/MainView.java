@@ -13,6 +13,8 @@ import java.sql.Connection;
 import java.util.List;
 import java.util.Scanner;
 
+import static org.example.BatiCuisine.entities.Projet.afficherDetailsProjet;
+
 public class MainView {
 
     private static final Scanner scanner = new Scanner(System.in);
@@ -94,7 +96,21 @@ public class MainView {
                     }
                     break;
                 case 3:
-                    System.out.println("Calculer le coût d'un projet...");
+                    System.out.println("Affichage des projets existants...");
+                    List<Projet> projets1 = projetService.listerAllProjets();
+                    if (projets1.isEmpty()) {
+                        System.out.println("Aucun projet trouvé.");
+                    } else {
+                        for (Projet projet : projets1) {
+                            System.out.println(projet);
+                        }
+                    }
+                    System.out.println("Enter l'id de projet a calculer ");
+                    Integer id = scanner.nextInt();
+                    scanner.nextLine();
+
+                    Projet projet = projetService.afficherProjet(id);
+                    afficherDetailsProjet(projet);
 
                     break;
                 case 4:
